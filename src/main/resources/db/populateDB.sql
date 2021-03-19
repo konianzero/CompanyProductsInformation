@@ -1,10 +1,10 @@
-DELETE FROM products;
 DELETE FROM articles;
+DELETE FROM products;
 ALTER SEQUENCE GLOBAL_SEQ RESTART WITH 100000;
 
 INSERT INTO products (name, description, implementation_cost) VALUES
-    ('КMS Lighthouse', 'система управления знаниями', '200000'),
-    ('Actimize', 'платформа противодействия финансовым преступлениям', '250000');
+    ('КMS Lighthouse', 'система управления знаниями', 200000),
+    ('Actimize', 'платформа противодействия финансовым преступлениям', 250000);
 
 INSERT INTO articles (product_id, name, content, date) VALUES
     (100000,
