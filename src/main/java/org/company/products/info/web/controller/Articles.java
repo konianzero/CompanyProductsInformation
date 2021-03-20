@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.company.products.info.Views;
 import org.company.products.info.model.Article;
@@ -51,9 +52,9 @@ public class Articles {
 
     @JsonView(Views.ArticleView.class)
     @GetMapping
-    public List<Article> getAll() {
-        log.info("Get all articles");
-        return articleService.getAll();
+    public List<Article> getAll(@RequestParam Optional<String> sortBy) {
+        log.info("Get all articles{}", sortBy.isPresent() ? " sort by " + sortBy : "");
+        return articleService.getAll(sortBy);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
