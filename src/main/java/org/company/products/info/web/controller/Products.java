@@ -31,11 +31,12 @@ public class Products {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> createWithLocation(@RequestBody Product product) {
+    public ResponseEntity<Product> create(@RequestBody Product product) {
         log.info("Create new product - {}", product);
+        Product created = productService.create(product);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                                                           .path(REST_URL + "/{id}")
-                                                          .buildAndExpand(product.getId())
+                                                          .buildAndExpand(created.getId())
                                                           .toUri();
         return ResponseEntity.created(uriOfNewResource)
                              .body(product);
