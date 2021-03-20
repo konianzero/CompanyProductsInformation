@@ -1,5 +1,7 @@
 package org.company.products.info.web.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+import org.company.products.info.Views;
 import org.company.products.info.model.Article;
 import org.company.products.info.service.ArticleService;
 
@@ -38,12 +41,14 @@ public class Articles {
                              .body(article);
     }
 
+    @JsonView(Views.ArticleView.class)
     @GetMapping("/{id}")
     public Article get(@PathVariable int id) {
         log.info("Get article with id={}", id);
         return articleService.get(id);
     }
 
+    @JsonView(Views.ArticleView.class)
     @GetMapping
     public List<Article> getAll() {
         log.info("Get all articles");

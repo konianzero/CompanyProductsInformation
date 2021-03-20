@@ -21,6 +21,10 @@ public class AbstractBaseEntity {
         this.id = id;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + ":" + id;
