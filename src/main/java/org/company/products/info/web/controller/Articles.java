@@ -20,6 +20,11 @@ import org.company.products.info.Views;
 import org.company.products.info.model.Article;
 import org.company.products.info.service.ArticleService;
 
+import javax.validation.Valid;
+
+import static org.company.products.info.util.ValidationUtil.assureIdConsistent;
+import static org.company.products.info.util.ValidationUtil.checkNew;
+
 @RestController
 @RequestMapping(value = Articles.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class Articles {
@@ -33,7 +38,8 @@ public class Articles {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Article> create(@RequestBody Article article) {
+    public ResponseEntity<Article> create(@Valid @RequestBody Article article) {
+        checkNew(article);
         log.info("Create new article - {}", article);
         Article created = articleService.create(article);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -66,9 +72,10 @@ public class Articles {
         return articleService.getAll(sortBy, filterBy, filter, fromDate, toDate);
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Article article) {
+    public void update(@Valid @RequestBody Article article, @PathVariable int id) {
+        assureIdConsistent(article, id);
         log.info("Update article - {}", article);
         articleService.update(article);
     }

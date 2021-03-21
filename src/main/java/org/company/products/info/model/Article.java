@@ -22,7 +22,6 @@ public class Article extends AbstractNamedEntity {
     @JsonView(Views.ArticleView.class)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
-    @Nullable
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
 
@@ -36,6 +35,10 @@ public class Article extends AbstractNamedEntity {
     @NotNull
     @Column(name = "date", nullable = false, columnDefinition = "DATE DEFAULT now()")
     private LocalDate date;
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
     @Override
     public String toString() {

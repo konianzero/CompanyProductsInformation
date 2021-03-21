@@ -19,6 +19,11 @@ import org.company.products.info.Views;
 import org.company.products.info.model.Product;
 import org.company.products.info.service.ProductService;
 
+import javax.validation.Valid;
+
+import static org.company.products.info.util.ValidationUtil.assureIdConsistent;
+import static org.company.products.info.util.ValidationUtil.checkNew;
+
 @RestController
 @RequestMapping(value = Products.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class Products {
@@ -32,7 +37,8 @@ public class Products {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> create(@RequestBody Product product) {
+    public ResponseEntity<Product> create(@Valid @RequestBody Product product) {
+        checkNew(product);
         log.info("Create new product - {}", product);
         Product created = productService.create(product);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -65,9 +71,10 @@ public class Products {
         return productService.getAll(sortBy, filterBy, filter, costFrom, costTo);
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Product product) {
+    public void update(@Valid @RequestBody Product product, @PathVariable int id) {
+        assureIdConsistent(product, id);
         log.info("Update product - {}", product);
         productService.update(product);
     }

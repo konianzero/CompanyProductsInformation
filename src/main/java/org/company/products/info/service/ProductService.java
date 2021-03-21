@@ -13,6 +13,8 @@ import org.company.products.info.model.Product;
 import org.company.products.info.repository.ProductRepository;
 import org.company.products.info.util.Util;
 
+import static org.company.products.info.util.ValidationUtil.checkNotFoundWithId;
+
 @Service
 public class ProductService {
 
@@ -33,7 +35,7 @@ public class ProductService {
     }
 
     public Product get(int id) {
-        return productRepository.findById(id).get();
+        return checkNotFoundWithId(productRepository.findById(id), id);
     }
 
     public List<Product> getAll(Optional<String> sortColumn,
@@ -52,11 +54,11 @@ public class ProductService {
     }
 
     public void update(Product product) {
-        save(product);
+        checkNotFoundWithId(save(product), product.getId());
     }
 
     @Transactional
     public void delete(int id) {
-        productRepository.deleteById(id);
+        checkNotFoundWithId(productRepository.delete(id), id);
     }
 }
