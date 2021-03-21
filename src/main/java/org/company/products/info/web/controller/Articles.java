@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,9 +53,17 @@ public class Articles {
 
     @JsonView(Views.ArticleView.class)
     @GetMapping
-    public List<Article> getAll(@RequestParam Optional<String> sortBy) {
-        log.info("Get all articles{}", sortBy.isPresent() ? " sort by " + sortBy : "");
-        return articleService.getAll(sortBy);
+    public List<Article> getAll(@RequestParam Optional<String> sortBy,
+                                @RequestParam Optional<String> filterBy,
+                                @RequestParam Optional<String> filter,
+                                @RequestParam Optional<LocalDate> fromDate,
+                                @RequestParam Optional<LocalDate> toDate)
+    {
+        log.info("Get all articles{}{}",
+                sortBy.isPresent() ? ", sort by " + sortBy : "",
+                filterBy.isPresent() ? ", filter by " + filterBy : ""
+        );
+        return articleService.getAll(sortBy, filterBy, filter, fromDate, toDate);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

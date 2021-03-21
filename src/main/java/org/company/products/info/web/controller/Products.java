@@ -52,9 +52,17 @@ public class Products {
 
     @JsonView(Views.ProductView.class)
     @GetMapping
-    public List<Product> getAll(@RequestParam Optional<String> sortBy) {
-        log.info("Get all products{}", sortBy.isPresent() ? " sort by " + sortBy : "");
-        return productService.getAll(sortBy);
+    public List<Product> getAll(@RequestParam Optional<String> sortBy,
+                                @RequestParam Optional<String> filterBy,
+                                @RequestParam Optional<String> filter,
+                                @RequestParam Optional<Integer> costFrom,
+                                @RequestParam Optional<Integer> costTo)
+    {
+        log.info("Get all products{}{}",
+                sortBy.isPresent() ? ", sort by " + sortBy : "",
+                filterBy.isPresent() ? ", filter by " + filterBy : ""
+        );
+        return productService.getAll(sortBy, filterBy, filter, costFrom, costTo);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
