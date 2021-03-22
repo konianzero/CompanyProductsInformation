@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.company.products.info.Views;
+import org.company.products.info.to.ArticleTo;
 import org.company.products.info.model.Article;
 import org.company.products.info.service.ArticleService;
 
@@ -38,16 +39,16 @@ public class Articles {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Article> create(@Valid @RequestBody Article article) {
-        checkNew(article);
-        log.info("Create new article - {}", article);
-        Article created = articleService.create(article);
+    public ResponseEntity<Article> create(@Valid @RequestBody ArticleTo articleTo) {
+        checkNew(articleTo);
+        log.info("Create new article - {}", articleTo);
+        Article created = articleService.create(articleTo);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                                                           .path(REST_URL + "/{id}")
                                                           .buildAndExpand(created.getId())
                                                           .toUri();
         return ResponseEntity.created(uriOfNewResource)
-                             .body(article);
+                             .body(created);
     }
 
     @JsonView(Views.ArticleView.class)
@@ -74,10 +75,10 @@ public class Articles {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Article article, @PathVariable int id) {
-        assureIdConsistent(article, id);
-        log.info("Update article - {}", article);
-        articleService.update(article);
+    public void update(@Valid @RequestBody ArticleTo articleTo, @PathVariable int id) {
+        assureIdConsistent(articleTo, id);
+        log.info("Update article - {}", articleTo);
+        articleService.update(articleTo);
     }
 
     @DeleteMapping("/{id}")

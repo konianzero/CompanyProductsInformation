@@ -1,6 +1,5 @@
 package org.company.products.info.service;
 
-import org.company.products.info.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.company.products.info.model.Article;
+import org.company.products.info.to.ArticleTo;
+import org.company.products.info.repository.ProductRepository;
 import org.company.products.info.repository.ArticleRepository;
 import org.company.products.info.util.Util;
 
@@ -29,16 +30,17 @@ public class ArticleService {
         this.productRepository = productRepository;
     }
 
-    public Article create(Article article) {
-        return save(article);
+    public Article create(ArticleTo articleTo) {
+        Article newArticle = new Article(articleTo);
+        return save(newArticle, articleTo.getProductId());
     }
 
     @Transactional
-    protected Article save(Article article) {
+    protected Article save(Article article, int productId) {
         if (!article.isNew() && get(article.getId()) == null) {
             return null;
         }
-        article.setProduct(checkNotFoundWithId(productRepository.findById(article.getId()), article.getId()));
+        article.setProduct(checkNotFoundWithId(productRepository.findById(productId), productId));
         return articleRepository.save(article);
     }
 
@@ -61,8 +63,9 @@ public class ArticleService {
                              .orElseGet(articleRepository::findAll);
     }
 
-    public void update(Article article) {
-        checkNotFoundWithId(save(article), article.getId());
+    public void update(ArticleTo articleTo) {
+        Article updateArticle = new Article(articleTo);
+        checkNotFoundWithId(save(updateArticle, articleTo.getProductId()), articleTo.getId());
     }
 
     @Transactional

@@ -1,11 +1,10 @@
 package org.company.products.info.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+import org.company.products.info.to.ArticleTo;
 import org.company.products.info.Views;
 
 @Entity
@@ -28,7 +28,7 @@ public class Article extends AbstractNamedEntity {
     @JsonView({Views.ProductView.class, Views.ArticleView.class})
     @NotBlank
     @Column(name = "content", nullable = false)
-    @Size(min = 150, max = 5000)
+    @Size(min = 30, max = 5000)
     private String content;
 
     @JsonView({Views.ProductView.class, Views.ArticleView.class})
@@ -36,8 +36,41 @@ public class Article extends AbstractNamedEntity {
     @Column(name = "date", nullable = false, columnDefinition = "DATE DEFAULT now()")
     private LocalDate date;
 
+    public Article() {  }
+
+    public Article(ArticleTo articleTo) {
+        this(articleTo.getId(), articleTo.getName(), null, articleTo.getContent(), LocalDate.now());
+    }
+
+    public Article(Integer id, String name, Product product, String content, LocalDate date) {
+        super(id, name);
+        this.product = product;
+        this.content = content;
+        this.date = date;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     @Override

@@ -14,12 +14,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.Valid;
 
 import org.company.products.info.Views;
 import org.company.products.info.model.Product;
 import org.company.products.info.service.ProductService;
-
-import javax.validation.Valid;
 
 import static org.company.products.info.util.ValidationUtil.assureIdConsistent;
 import static org.company.products.info.util.ValidationUtil.checkNew;

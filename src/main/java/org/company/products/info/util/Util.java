@@ -47,8 +47,7 @@ public class Util {
         return (root, query, builder) -> builder.between(root.get(filterColumn), from, to);
     }
 
-    public static @Nullable
-    LocalDate parseLocalDate(@Nullable String str) {
+    public static @Nullable LocalDate parseLocalDate(@Nullable String str) {
         return StringUtils.hasText(str) ? LocalDate.parse(str) : null;
     }
 }
