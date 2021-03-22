@@ -3,6 +3,7 @@ package org.company.products.info.util;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class Util {
                     to.map(t -> ((LocalDate) t)).orElse(MAX_DATE)
             );
             case "name", "description", "content": return stringFilterLike(filterColumn, filter.orElse(""));
-            default: return null;
+            default: throw new IllegalArgumentException("filter by " + filterColumn + " not supported");
         }
     }
 
