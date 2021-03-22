@@ -1,7 +1,5 @@
 package org.company.products.info.web.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 
-import org.company.products.info.Views;
 import org.company.products.info.model.Product;
 import org.company.products.info.service.ProductService;
 
@@ -48,14 +45,12 @@ public class Products {
                              .body(product);
     }
 
-    @JsonView(Views.ProductView.class)
     @GetMapping("/{id}")
     public Product get(@PathVariable int id) {
         log.info("Get product with id={}", id);
         return productService.get(id);
     }
 
-    @JsonView(Views.ProductView.class)
     @GetMapping
     public List<Product> getAll(@RequestParam Optional<String> sortBy,
                                 @RequestParam Optional<String> filterBy,

@@ -4,10 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import org.company.products.info.HasId;
-import org.company.products.info.Views;
 
 public class ArticleTo implements HasId {
     private Integer id;
@@ -16,7 +13,6 @@ public class ArticleTo implements HasId {
     @Size(min = 2, max = 150)
     private String name;
 
-    @JsonView(Views.ArticleView.class)
     @NotNull
     private int productId;
 

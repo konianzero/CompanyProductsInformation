@@ -1,7 +1,5 @@
 package org.company.products.info.web.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.company.products.info.Views;
 import org.company.products.info.to.ArticleTo;
 import org.company.products.info.model.Article;
 import org.company.products.info.service.ArticleService;
@@ -51,14 +48,12 @@ public class Articles {
                              .body(created);
     }
 
-    @JsonView(Views.ArticleView.class)
     @GetMapping("/{id}")
     public Article get(@PathVariable int id) {
         log.info("Get article with id={}", id);
         return articleService.get(id);
     }
 
-    @JsonView(Views.ArticleView.class)
     @GetMapping
     public List<Article> getAll(@RequestParam Optional<String> sortBy,
                                 @RequestParam Optional<String> filterBy,
