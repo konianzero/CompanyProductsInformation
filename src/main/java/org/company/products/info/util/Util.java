@@ -24,12 +24,12 @@ public class Util {
     {
         switch (filterColumn) {
             case "implementationCost": return integerFilterBetween(filterColumn,
-                    from.map(t -> ((Integer) t)).orElse(MIN_COST),
-                    to.map(t -> ((Integer) t)).orElse(MAX_COST)
+                    from.map(Integer.class::cast).orElse(MIN_COST),
+                    to.map(Integer.class::cast).orElse(MAX_COST)
             );
             case "date": return dateFilterBetween(filterColumn,
-                    from.map(t -> ((LocalDate) t)).orElse(MIN_DATE),
-                    to.map(t -> ((LocalDate) t)).orElse(MAX_DATE)
+                    from.map(LocalDate.class::cast).orElse(MIN_DATE),
+                    to.map(LocalDate.class::cast).orElse(MAX_DATE)
             );
             case "name", "description", "content": return stringFilterLike(filterColumn, filter.orElse(""));
             default: throw new IllegalArgumentException("filter by " + filterColumn + " not supported");
