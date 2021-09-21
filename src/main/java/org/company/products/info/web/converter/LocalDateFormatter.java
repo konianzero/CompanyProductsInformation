@@ -1,18 +1,17 @@
 package org.company.products.info.web.converter;
 
 import org.springframework.format.Formatter;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static org.company.products.info.util.Util.parseLocalDate;
-
 public class LocalDateFormatter implements Formatter<LocalDate> {
 
         @Override
         public LocalDate parse(String text, Locale locale) {
-            return parseLocalDate(text);
+            return StringUtils.hasText(text) ? LocalDate.parse(text) : null;
         }
 
         @Override

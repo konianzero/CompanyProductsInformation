@@ -14,7 +14,7 @@ import org.company.products.info.model.Article;
 import org.company.products.info.to.ArticleTo;
 import org.company.products.info.repository.ProductRepository;
 import org.company.products.info.repository.ArticleRepository;
-import org.company.products.info.util.Util;
+import org.company.products.info.util.JpaSpecificationUtil;
 
 import static org.company.products.info.util.ValidationUtil.checkNotFoundWithId;
 
@@ -55,7 +55,7 @@ public class ArticleService {
                                 Optional<LocalDate> toDate)
     {
         if (filterColumn.isPresent()) {
-            Specification<Article> spec = Util.filterBy(filterColumn.get(), filter, fromDate, toDate);
+            Specification<Article> spec = JpaSpecificationUtil.filterBy(filterColumn.get(), filter, fromDate, toDate);
             return sortColumn.map(col -> articleRepository.findAll(spec, Sort.by(Sort.Direction.DESC, col)))
                              .orElse(articleRepository.findAll(spec));
         } else

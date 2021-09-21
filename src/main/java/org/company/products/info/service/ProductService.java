@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import org.company.products.info.model.Product;
 import org.company.products.info.repository.ProductRepository;
-import org.company.products.info.util.Util;
+import org.company.products.info.util.JpaSpecificationUtil;
 
 import static org.company.products.info.util.ValidationUtil.checkNotFoundWithId;
 
@@ -45,7 +45,7 @@ public class ProductService {
                                 Optional<Integer> costTo)
     {
         if (filterColumn.isPresent()) {
-            Specification<Product> spec = Util.filterBy(filterColumn.get(), filter, costFrom, costTo);
+            Specification<Product> spec = JpaSpecificationUtil.filterBy(filterColumn.get(), filter, costFrom, costTo);
             return sortColumn.map(col -> productRepository.findAll(spec, Sort.by(Sort.Direction.DESC, col)))
                              .orElse(productRepository.findAll(spec));
         } else
