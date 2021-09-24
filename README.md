@@ -85,10 +85,10 @@ curl -X GET http://localhost:8080/info/products
 ```
  - Фильтрация и сортировка(нисходящая)
 ```shell
-curl -X GET http://localhost:8080/info/products?&filterBy=name&filter=дин
+curl -X GET http://localhost:8080/info/products?filterBy=name&filter=дин
 ```
 ```shell
-curl -X GET http://localhost:8080/info/products?&filterBy=implementationCost&costFrom=200100
+curl -X GET http://localhost:8080/info/products?filterBy=implementationCost&costFrom=200100
 ```
 ```shell
 curl -X GET http://localhost:8080/info/products?sortBy=implementationCost
@@ -114,7 +114,7 @@ curl -X GET http://localhost:8080/info/articles/100004
 ```
  - Фильтрация и сортировка(нисходящая)
 ```shell
-curl -X GET http://localhost:8080/info/articles?&filterBy=name&filter=пер
+curl -X GET http://localhost:8080/info/articles?filterBy=name&filter=пер
 ```
 ```shell
 curl -X GET http://localhost:8080/info/articles?filterBy=date&toDate=2021-09-20
