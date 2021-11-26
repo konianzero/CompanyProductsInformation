@@ -25,11 +25,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public Product create(Product product) {
         return save(product);
     }
 
-    @Transactional
     protected Product save(Product product) {
         return productRepository.save(product);
     }
@@ -53,6 +53,7 @@ public class ProductService {
                              .orElseGet(productRepository::findAll);
     }
 
+    @Transactional
     public void update(Product product) {
         checkNotFoundWithId(save(product), product.getId());
     }

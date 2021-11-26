@@ -30,12 +30,12 @@ public class ArticleService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public Article create(ArticleTo articleTo) {
         Article newArticle = new Article(articleTo);
         return save(newArticle, articleTo.getProductId());
     }
 
-    @Transactional
     protected Article save(Article article, int productId) {
         if (!article.isNew() && get(article.getId()) == null) {
             return null;
@@ -63,6 +63,7 @@ public class ArticleService {
                              .orElseGet(articleRepository::findAll);
     }
 
+    @Transactional
     public void update(ArticleTo articleTo) {
         Article updateArticle = new Article(articleTo);
         checkNotFoundWithId(save(updateArticle, articleTo.getProductId()), articleTo.getId());
