@@ -43,7 +43,7 @@ _**Hibernate/Spring/SpringMVC**_
 
 ### Запуск
 ```
-mvn clean package org.codehaus.cargo:cargo-maven2-plugin:1.8.2:run
+mvn spring-boot:run
 ```
 
 URL: [http://localhost:8080/info](http://localhost:8080/info)
