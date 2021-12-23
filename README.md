@@ -24,12 +24,9 @@ _**Hibernate/Spring/SpringMVC**_
 
 В проекте используются:
 
-- _Tomcat_ в качестве веб-сервера
-- _Spring MVC_ как фреймворк MVC
+- _Spring Boot_
 - _HSQLDB_ для хранения данных
-- _Hibernate_ и _Spring Data JPA_ для работы с БД
-- _Jackson_ для обработки JSON
-- _JUnit_ для тестирования
+- _Lombok_ для кодогенерации
 
 ---
 
@@ -37,7 +34,6 @@ _**Hibernate/Spring/SpringMVC**_
 
 - JDK 15
 - Maven 3
-- Tomcat 9
 
 ---
 
