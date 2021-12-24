@@ -7,7 +7,7 @@ server:
       enabled: true # Enable http encoding support
       force: true
   error:
-#    whitelabel.enabled: false
+    whitelabel.enabled: false
     include-message: always
     include-binding-errors: always
     include-exception: false
@@ -33,9 +33,9 @@ spring:
   #    data-locations: classpath:schema.sql, classpath:data.sql
   mvc:
     throw-exception-if-no-handler-found: true
-#  web:
-#    resources:
-#      add-mappings: false
+  web:
+    resources:
+      add-mappings: false
 
 logging:
   charset:

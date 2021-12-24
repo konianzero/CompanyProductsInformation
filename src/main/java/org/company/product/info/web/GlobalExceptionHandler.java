@@ -1,58 +1,60 @@
 package org.company.product.info.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.company.product.info.util.exception.*;
 
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import org.company.product.info.util.ValidationUtil;
-import org.company.product.info.util.exception.ErrorInfo;
-import org.company.product.info.util.exception.ErrorType;
-import org.company.product.info.util.exception.IllegalRequestDataException;
-import org.company.product.info.util.exception.NotFoundException;
-
-import static org.company.product.info.util.exception.ErrorType.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+@AllArgsConstructor
+@Slf4j
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private final ErrorAttributes errorAttributes;
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorInfo> wrongRequest(HttpServletRequest req, NoHandlerFoundException e) {
-        return logAndGetErrorInfo(req, e, WRONG_REQUEST);
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("No Handler Found Exception", ex);
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", ex.getLocalizedMessage());
+        map.put("error", status.getReasonPhrase());
+        map.put("status", status.value());
+        return ResponseEntity.status(status).body(map);
     }
 
-    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<ErrorInfo> illegalRequestDataError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, VALIDATION_ERROR);
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<Map<String, Object>> appException(AppException ex, WebRequest req) {
+        log.error("Application Exception", ex);
+        Map<String, Object> body = errorAttributes.getErrorAttributes(req, ex.getOptions());
+        HttpStatus status = ex.getStatus();
+        body.put("status", status.value());
+        body.put("error", status.getReasonPhrase());
+        body.put("exception", ex.getClass().getSimpleName());
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(status).body(body);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorInfo> handleError(HttpServletRequest req, NotFoundException e) {
-        return logAndGetErrorInfo(req, e, DATA_NOT_FOUND);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorInfo> handleError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, APP_ERROR);
-    }
-
-    private ResponseEntity<ErrorInfo> logAndGetErrorInfo(HttpServletRequest req, Exception e, ErrorType errorType) {
-        Throwable rootCause = ValidationUtil.logAndGetRootCause(log, req, e, errorType);
-        return ResponseEntity.status(errorType.getStatus())
-                             .body(
-                                    new ErrorInfo(
-                                        req.getRequestURL(),
-                                        errorType,
-                                        errorType.getErrorCode(),
-                                        ValidationUtil.getMessage(rootCause))
-                            );
+    @NonNull
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(@NonNull Exception ex, Object body, @NonNull HttpHeaders headers, HttpStatus status, @NonNull WebRequest request) {
+        log.error("Internal Exception", ex);
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", ex.getLocalizedMessage());
+        map.put("error", status.getReasonPhrase());
+        map.put("status", status.value());
+        return ResponseEntity.status(status).body(map);
     }
 }

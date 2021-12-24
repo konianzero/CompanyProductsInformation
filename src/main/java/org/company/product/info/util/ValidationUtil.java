@@ -1,14 +1,10 @@
 package org.company.product.info.util;
 
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.company.product.info.HasId;
-import org.company.product.info.util.exception.ErrorType;
 import org.company.product.info.util.exception.IllegalRequestDataException;
 import org.company.product.info.util.exception.NotFoundException;
 
@@ -45,25 +41,5 @@ public class ValidationUtil {
         if (isFound) {
             throw new NotFoundException("Not found entity with id=" + id);
         }
-    }
-
-    public static Throwable logAndGetRootCause(Logger log, HttpServletRequest req, Exception e, ErrorType errorType) {
-        Throwable rootCause = getRootCause(e);
-        log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
-        return rootCause;
-    }
-
-    public static Throwable getRootCause(Throwable t) {
-        Throwable result = t;
-        Throwable cause;
-
-        while (null != (cause = result.getCause()) && (result != cause)) {
-            result = cause;
-        }
-        return result;
-    }
-
-    public static String getMessage(Throwable e) {
-        return e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName();
     }
 }
