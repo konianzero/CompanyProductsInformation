@@ -15,8 +15,6 @@ public class AppException extends ResponseStatusException {
         this.options = options;
     }
 
-
-
     @Override
     public String getMessage() {
         return NestedExceptionUtils.buildMessage(getReason(), this.getCause());

@@ -12,7 +12,8 @@ import org.company.product.info.service.ArticleService;
 import org.company.product.info.TestUtil;
 import org.company.product.info.model.Article;
 import org.company.product.info.util.JsonUtil;
-import org.company.product.info.util.exception.NotFoundException;
+
+import javax.persistence.EntityNotFoundException;
 
 import static org.company.product.info.web.controller.ArticleTestData.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -76,6 +77,6 @@ class ArticlesTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + ARTICLE_1_ID))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(ARTICLE_1_ID));
+        assertThrows(EntityNotFoundException.class, () -> service.get(ARTICLE_1_ID));
     }
 }
