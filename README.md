@@ -12,13 +12,13 @@ _**Spring Boot**_
 - отфильтровать статьи по названию, контенту, дате создания (с - по)
 
 Для фильтрации и сортировки репозитории (
-[ProductRepository](src/main/java/org/company/products/info/repository/ProductRepository.java), 
-[ArticleRepository](src/main/java/org/company/products/info/repository/ArticleRepository.java)) 
+[ProductRepository](src/main/java/org/company/product/info/repository/ProductRepository.java), 
+[ArticleRepository](src/main/java/org/company/product/info/repository/ArticleRepository.java)) 
 реализуют JpaSpecificationExecutor. Для создания Specification используется 
-[JpaSpecificationUtil](src/main/java/org/company/products/info/util/JpaSpecificationUtil.java).
+[JpaSpecificationUtil](src/main/java/org/company/product/info/util/JpaSpecificationUtil.java).
 
 Для предотвращения зацикливания применяется аннотация [@JsonIgnoreProperties](https://stackoverflow.com/a/39573255) в 
-[Article](src/main/java/org/company/products/info/model/Article.java).
+[Article](src/main/java/org/company/product/info/model/Article.java).
 
 ---
 
@@ -27,6 +27,8 @@ _**Spring Boot**_
 - _Spring Boot_
 - _HSQLDB_ для хранения данных
 - _Lombok_ для кодогенерации
+
+[Application Properties](src/main/resources/application.yaml)
 
 ---
 
@@ -65,6 +67,8 @@ URL: [http://localhost:8080/info](http://localhost:8080/info)
 
 ### Команды CURL
 
+Можно использовать IntelliJ IDEA HTTP client с [endpoints.http](endpoints.http).
+
 #### Информация о продукте
 
 **Создать информацию о продукте**
@@ -79,7 +83,7 @@ curl -X GET http://localhost:8080/info/products/100001
 ```shell
 curl -X GET http://localhost:8080/info/products
 ```
- - Фильтрация и сортировка(нисходящая)
+ - Фильтрация и сортировка(по умолчанию нисходящая)
 ```shell
 curl -X GET http://localhost:8080/info/products?filterBy=name&filter=дин
 ```
@@ -108,7 +112,11 @@ curl -X POST -d '{"name":"Статья про НОВЫЙ продукт","produc
 ```shell
 curl -X GET http://localhost:8080/info/articles/100004
 ```
- - Фильтрация и сортировка(нисходящая)
+**Получить все статьи**
+```shell
+curl -X GET http://localhost:8080/info/articles
+```
+ - Фильтрация и сортировка(по умолчанию нисходящая)
 ```shell
 curl -X GET http://localhost:8080/info/articles?filterBy=name&filter=пер
 ```
@@ -117,10 +125,6 @@ curl -X GET http://localhost:8080/info/articles?filterBy=date&toDate=2021-09-20
 ```
 ```shell
 curl -X GET http://localhost:8080/info/articles?sortBy=id
-```
-**Получить все статьи**
-```shell
-curl -X GET http://localhost:8080/info/articles
 ```
 **Обновить статью**
 ```shell
