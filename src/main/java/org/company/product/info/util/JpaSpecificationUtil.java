@@ -19,18 +19,18 @@ public class JpaSpecificationUtil {
                                                                       Optional<T> from,
                                                                       Optional<T> to)
     {
-        switch (filterColumn) {
-            case "implementationCost": return objectFilterBetween(filterColumn,
+        return switch (filterColumn) {
+            case "implementationCost" -> objectFilterBetween(filterColumn,
                     from.map(Integer.class::cast).orElse(MIN_COST),
                     to.map(Integer.class::cast).orElse(MAX_COST)
             );
-            case "date": return objectFilterBetween(filterColumn,
+            case "date" -> objectFilterBetween(filterColumn,
                     from.map(LocalDate.class::cast).orElse(MIN_DATE),
                     to.map(LocalDate.class::cast).orElse(MAX_DATE)
             );
-            case "name", "description", "content": return stringFilterLike(filterColumn, filter.orElse(""));
-            default: throw new IllegalArgumentException("filter by " + filterColumn + " not supported");
-        }
+            case "name", "description", "content" -> stringFilterLike(filterColumn, filter.orElse(""));
+            default -> throw new IllegalArgumentException("filter by " + filterColumn + " not supported");
+        };
     }
 
     private static <U> Specification<U> stringFilterLike(String filterColumn, String filter) {
