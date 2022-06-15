@@ -1,5 +1,6 @@
 package org.company.product.info.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,16 +20,11 @@ import org.company.product.info.util.JpaSpecificationUtil;
 import static org.company.product.info.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
+@RequiredArgsConstructor
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final ProductRepository productRepository;
-
-    @Autowired
-    public ArticleService(ArticleRepository articleRepository, ProductRepository productRepository) {
-        this.articleRepository = articleRepository;
-        this.productRepository = productRepository;
-    }
 
     @Transactional
     public Article create(ArticleTo articleTo) {

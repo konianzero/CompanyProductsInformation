@@ -1,5 +1,7 @@
 package org.company.product.info.web.controller;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,15 +27,12 @@ import static org.company.product.info.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = Articles.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@Slf4j
+@RequiredArgsConstructor
 public class Articles {
     public static final String REST_URL = "/articles";
-    private static final Logger log = LoggerFactory.getLogger(Articles.class);
 
     private final ArticleService articleService;
-
-    public Articles(ArticleService articleService) {
-        this.articleService = articleService;
-    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Article> create(@Valid @RequestBody ArticleTo articleTo) {
