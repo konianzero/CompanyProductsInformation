@@ -4,8 +4,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.company.product.info.HasId;
 
+@Getter
+@Setter
 public class ArticleTo implements HasId {
     private Integer id;
 

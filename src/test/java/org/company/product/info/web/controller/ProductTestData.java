@@ -5,7 +5,7 @@ import org.company.product.info.model.Product;
 
 import java.util.List;
 
-import static org.company.product.info.model.AbstractBaseEntity.START_SEQ;
+import static org.company.product.info.model.BaseEntity.START_SEQ;
 
 public class ProductTestData {
     public static final TestMatcher<Product> PRODUCT_TEST_MATCHER = TestMatcher.usingEqualsComparator(Product.class);

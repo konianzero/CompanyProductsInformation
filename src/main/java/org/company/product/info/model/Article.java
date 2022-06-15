@@ -2,6 +2,8 @@ package org.company.product.info.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -15,7 +17,9 @@ import org.company.product.info.to.ArticleTo;
 
 @Entity
 @Table(name = "articles", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "name"}, name = "articles_unique_idx"))
-public class Article extends AbstractNamedEntity {
+@Getter
+@Setter
+public class Article extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
@@ -43,40 +47,5 @@ public class Article extends AbstractNamedEntity {
         this.product = product;
         this.content = content;
         this.date = date;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", product=" + product +
-                ", content='" + content + '\'' +
-                ", date=" + date +
-                '}';
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static org.company.product.info.web.controller.ProductTestData.*;
-import static org.company.product.info.model.AbstractBaseEntity.START_SEQ;
+import static org.company.product.info.model.BaseEntity.START_SEQ;
 
 public class ArticleTestData {
     public static final TestMatcher<Article> ARTICLE_TEST_MATCHER = TestMatcher.usingEqualsComparator(Article.class);

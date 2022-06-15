@@ -1,5 +1,7 @@
 package org.company.product.info.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -9,7 +11,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "products", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}, name = "products_unique_idx"))
-public class Product extends AbstractNamedEntity {
+@Getter
+@Setter
+public class Product extends NamedEntity {
 
     @NotBlank
     @Column(name = "description", nullable = false)
@@ -29,40 +33,5 @@ public class Product extends AbstractNamedEntity {
         super(id, name);
         this.description = description;
         this.implementationCost = implementationCost;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getImplementationCost() {
-        return implementationCost;
-    }
-
-    public void setImplementationCost(int implementationCost) {
-        this.implementationCost = implementationCost;
-    }
-
-    public List<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(List<Article> articles) {
-        this.articles = articles;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", implementationCost=" + implementationCost +
-                ", articles=" + articles +
-                '}';
     }
 }
