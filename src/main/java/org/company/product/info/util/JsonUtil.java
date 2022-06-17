@@ -8,8 +8,6 @@ import lombok.experimental.UtilityClass;
 import java.io.IOException;
 import java.util.List;
 
-import static org.company.product.info.web.json.JacksonObjectMapper.getMapper;
-
 @UtilityClass
 public class JsonUtil {
     private static ObjectMapper mapper;
