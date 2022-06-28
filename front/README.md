@@ -4,7 +4,7 @@
 _**Spring Web**_
 
 ### Запуск
-* Запуск используя Maven Spring Boot plugin
+* ~~Запуск используя Maven Spring Boot plugin~~ (WIP)
     ```bash
     mvn spring-boot:run
     ```

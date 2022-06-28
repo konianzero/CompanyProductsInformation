@@ -3,5 +3,5 @@
 
 !!! _**Work In Progress**_ !!!
 
-- Front микросервис (Controller layer)
-- Back микросервис (Persistence layer)
+- [Front микросервис](front) (Controller layer)
+- [Back микросервис](persistence) (Persistence layer)
