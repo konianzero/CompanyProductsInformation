@@ -1,4 +1,4 @@
-package org.company.persistence.model;
+package model;
 
 import lombok.*;
 import org.hibernate.Hibernate;

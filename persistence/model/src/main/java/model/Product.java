@@ -1,4 +1,4 @@
-package org.company.persistence.model;
+package model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

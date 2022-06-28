@@ -1,4 +1,4 @@
-package org.company.persistence.repository;
+package repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.company.persistence.model.Article;
+import model.Product;
 
-@RepositoryRestResource(path = "articles")
-public interface ArticleRepository extends JpaRepository<Article, Integer>, JpaSpecificationExecutor<Article> {
+@RepositoryRestResource(path = "products")
+public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
     @Modifying
     @Transactional
-    @Query("DELETE FROM Article a WHERE a.id = ?1")
+    @Query("DELETE FROM Product p WHERE p.id = ?1")
     int delete(int id);
 }

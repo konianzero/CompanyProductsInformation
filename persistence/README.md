@@ -3,8 +3,22 @@
 
 _**Spring Data Rest | HSQL**_
 
+___
+
+Многомодульный проект:
+  - [model](model)
+  - [repository](repository)
+  
+В проекте используются:
+
+- _Spring Boot_
+- _Spring Data Rest_
+- _HSQLDB_ для хранения данных
+- _Lombok_ для кодогенерации
+___
+
 ### Запуск
-* Запуск используя Maven Spring Boot plugin
+* ~~Запуск используя Maven Spring Boot plugin~~ (WIP)
     ```bash
     mvn spring-boot:run
     ```
@@ -16,7 +30,7 @@ _**Spring Data Rest | HSQL**_
       ```
   * Запустить
       ```bash
-      java -jar target/persistence-0.0.1-SNAPSHOT.jar
+      java -jar repository/target/repository-0.1.0-SNAPSHOT.jar
       ```
 
 ### Просмотр запущенного микросервиса
