@@ -15,12 +15,13 @@ ___
 - _Spring Data Rest_
 - _HSQLDB_ для хранения данных
 - _Lombok_ для кодогенерации
+
 ___
 
 ### Запуск
-* ~~Запуск используя Maven Spring Boot plugin~~ (WIP)
+* Запуск используя Maven Spring Boot plugin
     ```bash
-    mvn spring-boot:run
+    mvn spring-boot:run -pl repository
     ```
 
 * Запуск JAR
