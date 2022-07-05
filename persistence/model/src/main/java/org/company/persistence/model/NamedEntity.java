@@ -1,4 +1,4 @@
-package model;
+package org.company.persistence.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;

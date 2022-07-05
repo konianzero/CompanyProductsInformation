@@ -1,4 +1,4 @@
-package model;
+package org.company.persistence.model;
 
 public interface HasId {
     Integer getId();

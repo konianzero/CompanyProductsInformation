@@ -1,4 +1,4 @@
-package repository.util;
+package org.company.persistence.util;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
