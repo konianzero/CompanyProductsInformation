@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class ArticleController {
     private final ProductRepository productRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
     public Article create(@Valid @RequestBody ArticleTo articleTo) {
         checkNew(articleTo);
         log.info("Create new article - {}", articleTo);
@@ -39,6 +41,7 @@ public class ArticleController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void update(@Valid @RequestBody ArticleTo articleTo, @PathVariable int id) {
         assureIdConsistent(articleTo, id);
         log.info("Update article - {}", articleTo);
