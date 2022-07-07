@@ -1,4 +1,4 @@
-package org.company.persistence.web.converter;
+package org.company.persistence.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
