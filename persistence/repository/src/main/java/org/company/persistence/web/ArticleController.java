@@ -2,7 +2,7 @@ package org.company.persistence.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.company.persistence.dto.ArticleTo;
+import org.company.persistence.dto.ArticleDTO;
 import org.company.persistence.model.Article;
 import org.company.persistence.repository.ArticleRepository;
 import org.company.persistence.repository.ProductRepository;
@@ -33,19 +33,19 @@ public class ArticleController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public Article create(@Valid @RequestBody ArticleTo articleTo) {
-        checkNew(articleTo);
-        log.info("Create new article - {}", articleTo);
-        return save(articleFrom(articleTo), articleTo.getProductId());
+    public Article create(@Valid @RequestBody ArticleDTO articleDTO) {
+        checkNew(articleDTO);
+        log.info("Create new article - {}", articleDTO);
+        return save(articleFrom(articleDTO), articleDTO.getProductId());
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@Valid @RequestBody ArticleTo articleTo, @PathVariable int id) {
-        assureIdConsistent(articleTo, id);
-        log.info("Update article - {}", articleTo);
-        checkNotFoundWithId(save(articleFrom(articleTo), articleTo.getProductId()), articleTo.getId());
+    public void update(@Valid @RequestBody ArticleDTO articleDTO, @PathVariable int id) {
+        assureIdConsistent(articleDTO, id);
+        log.info("Update article - {}", articleDTO);
+        checkNotFoundWithId(save(articleFrom(articleDTO), articleDTO.getProductId()), articleDTO.getId());
     }
 
     protected Article save(Article article, int productId) {
@@ -89,7 +89,7 @@ public class ArticleController {
         checkNotFoundWithId(articleRepository.delete(id), id);
     }
 
-    private Article articleFrom(ArticleTo articleTo) {
+    private Article articleFrom(ArticleDTO articleTo) {
         return new Article(articleTo.getId(), articleTo.getName(), null, articleTo.getContent(), LocalDate.now());
     }
 }

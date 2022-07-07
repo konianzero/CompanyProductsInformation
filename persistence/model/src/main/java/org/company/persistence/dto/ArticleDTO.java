@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ArticleTo implements HasId {
+public class ArticleDTO implements HasId {
     private Integer id;
 
     @NotBlank

@@ -2,6 +2,7 @@ package org.company.persistence.web.converter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.company.persistence.dto.ProductDTO;
 import org.company.persistence.model.Product;
 import org.company.persistence.repository.ProductRepository;
 import org.company.persistence.util.JpaSpecificationUtil;
@@ -27,18 +28,18 @@ public class ProductController {
     private final ProductRepository productRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Product create(@Valid @RequestBody Product product) {
-        checkNew(product);
-        log.info("Create new product - {}", product);
-        return save(product);
+    public Product create(@Valid @RequestBody ProductDTO productDTO) {
+        checkNew(productDTO);
+        log.info("Create new product - {}", productDTO);
+        return save(productFrom(productDTO));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Product product, @PathVariable int id) {
-        assureIdConsistent(product, id);
-        log.info("Update product - {}", product);
-        checkNotFoundWithId(save(product), product.getId());
+    public void update(@Valid @RequestBody ProductDTO productDTO, @PathVariable int id) {
+        assureIdConsistent(productDTO, id);
+        log.info("Update product - {}", productDTO);
+        checkNotFoundWithId(save(productFrom(productDTO)), productDTO.getId());
     }
 
     protected Product save(Product product) {
@@ -76,5 +77,9 @@ public class ProductController {
     public void delete(@PathVariable int id) {
         log.info("Delete product with id={}", id);
         checkNotFoundWithId(productRepository.delete(id), id);
+    }
+
+    private Product productFrom(ProductDTO productTo) {
+        return new Product(productTo.getId(), productTo.getName(), productTo.getDescription(), productTo.getImplementationCost());
     }
 }
