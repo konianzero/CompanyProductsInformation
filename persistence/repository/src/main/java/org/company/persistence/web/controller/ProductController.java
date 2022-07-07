@@ -10,9 +10,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,10 +31,16 @@ public class ProductController {
     private final ProductRepository productRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Product create(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<Product> create(@Valid @RequestBody ProductDTO productDTO) {
         checkNew(productDTO);
         log.info("Create new product - {}", productDTO);
-        return save(productFrom(productDTO));
+        Product created = save(productFrom(productDTO));
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/{id}")
+                .buildAndExpand(created.getId())
+                .toUri();
+        return ResponseEntity.created(uriOfNewResource)
+                .body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

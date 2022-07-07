@@ -11,10 +11,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +36,16 @@ public class ArticleController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public Article create(@Valid @RequestBody ArticleDTO articleDTO) {
+    public ResponseEntity<Article> create(@Valid @RequestBody ArticleDTO articleDTO) {
         checkNew(articleDTO);
         log.info("Create new article - {}", articleDTO);
-        return save(articleFrom(articleDTO), articleDTO.getProductId());
+        Article created = save(articleFrom(articleDTO), articleDTO.getProductId());
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/{id}")
+                .buildAndExpand(created.getId())
+                .toUri();
+        return ResponseEntity.created(uriOfNewResource)
+                .body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
