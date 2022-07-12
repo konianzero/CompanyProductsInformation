@@ -3,7 +3,6 @@ package org.company.front.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.front.service.ArticleService;
-import org.company.front.to.ArticleTo;
 import org.company.persistence.model.Article;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,14 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.URI;
-import java.time.LocalDate;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
-
-import static org.company.front.util.ValidationUtil.assureIdConsistent;
-import static org.company.front.util.ValidationUtil.checkNew;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = Articles.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,10 +28,10 @@ public class Articles {
     private final ArticleService articleService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Article> create(@Valid @RequestBody ArticleTo articleTo) {
-        checkNew(articleTo);
-        log.info("Create new article - {}", articleTo);
-        Article created = articleService.create(articleTo);
+    public ResponseEntity<Article> create(HttpServletRequest request) throws IOException {
+        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        log.info("Create new article - {}", requestBody);
+        Article created = articleService.create(requestBody);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId())
@@ -49,25 +47,18 @@ public class Articles {
     }
 
     @GetMapping
-    public List<Article> getAll(@RequestParam Optional<String> sortBy,
-                                @RequestParam Optional<String> filterBy,
-                                @RequestParam Optional<String> filter,
-                                @RequestParam Optional<LocalDate> fromDate,
-                                @RequestParam Optional<LocalDate> toDate)
-    {
-        log.info("Get all articles{}{}",
-                sortBy.isPresent() ? ", sort by " + sortBy : "",
-                filterBy.isPresent() ? ", filter by " + filterBy : ""
-        );
-        return articleService.getAll(sortBy, filterBy, filter, fromDate, toDate);
+    public List<Article> getAll(HttpServletRequest request) {
+        String requestQuery = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
+        log.info("Get all articles with query - {}", requestQuery);
+        return articleService.getAll(requestQuery);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody ArticleTo articleTo, @PathVariable int id) {
-        assureIdConsistent(articleTo, id);
-        log.info("Update article - {}", articleTo);
-        articleService.update(articleTo);
+    public void update(HttpServletRequest request, @PathVariable int id) throws IOException {
+        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        log.info("Update article - {}", requestBody);
+        articleService.update(requestBody, id);
     }
 
     @DeleteMapping("/{id}")
