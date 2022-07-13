@@ -3,6 +3,7 @@ package org.company.front.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.front.service.ProductService;
+import org.company.persistence.model.Article;
 import org.company.persistence.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,10 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.company.front.util.ValidationUtil.assureIdConsistent;
 import static org.company.front.util.ValidationUtil.checkNew;
@@ -28,16 +34,16 @@ public class Products {
     private final ProductService productService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> create(@Valid @RequestBody Product product) {
-        checkNew(product);
-        log.info("Create new product - {}", product);
-        Product created = productService.create(product);
+    public ResponseEntity<Product> create(HttpServletRequest request) throws IOException {
+        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        log.info("Create new article - {}", requestBody);
+        Product created = productService.create(requestBody);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
         return ResponseEntity.created(uriOfNewResource)
-                .body(product);
+                .body(created);
     }
 
     @GetMapping("/{id}")
@@ -47,25 +53,18 @@ public class Products {
     }
 
     @GetMapping
-    public List<Product> getAll(@RequestParam Optional<String> sortBy,
-                                @RequestParam Optional<String> filterBy,
-                                @RequestParam Optional<String> filter,
-                                @RequestParam Optional<Integer> costFrom,
-                                @RequestParam Optional<Integer> costTo)
-    {
-        log.info("Get all products{}{}",
-                sortBy.isPresent() ? ", sort by " + sortBy : "",
-                filterBy.isPresent() ? ", filter by " + filterBy : ""
-        );
-        return productService.getAll(sortBy, filterBy, filter, costFrom, costTo);
+    public List<Product> getAll(HttpServletRequest request) {
+        String requestQuery = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
+        log.info("Get all articles with query - {}", requestQuery);
+        return productService.getAll(requestQuery);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Product product, @PathVariable int id) {
-        assureIdConsistent(product, id);
-        log.info("Update product - {}", product);
-        productService.update(product);
+    public void update(HttpServletRequest request, @PathVariable int id) throws IOException {
+        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        log.info("Update article - {}", requestBody);
+        productService.update(requestBody, id);
     }
 
     @DeleteMapping("/{id}")

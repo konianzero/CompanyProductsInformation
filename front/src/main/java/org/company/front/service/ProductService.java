@@ -2,57 +2,61 @@ package org.company.front.service;
 
 import lombok.RequiredArgsConstructor;
 import org.company.persistence.model.Product;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.company.front.util.ValidationUtil.checkNotFoundWithId;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    public static final String URI_PRODUCTS = "http://localhost:8081/products";
+    private static final String URI_PRODUCTS_ID = URI_PRODUCTS + "/{id}";
+
+    private final RestTemplate restTemplate;
 
     @Transactional
-    public Product create(Product product) {
-        return save(product);
-    }
-
-    protected Product save(Product product) {
-        return productRepository.save(product);
+    public Product create(String requestBody) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+        return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
     }
 
     public Product get(int id) {
-        return checkNotFoundWithId(productRepository.findById(id), id);
+        Map<String, Integer> params = new HashMap<>();
+        params.put("id", id);
+        return restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, params);
     }
 
-    public List<Product> getAll(Optional<String> sortColumn,
-                                Optional<String> filterColumn,
-                                Optional<String> filter,
-                                Optional<Integer> costFrom,
-                                Optional<Integer> costTo)
-    {
-        if (filterColumn.isPresent()) {
-            Specification<Product> spec = JpaSpecificationUtil.filterBy(filterColumn.get(), filter, costFrom, costTo);
-            return sortColumn.map(col -> productRepository.findAll(spec, Sort.by(Sort.Direction.DESC, col)))
-                    .orElse(productRepository.findAll(spec));
-        } else
-            return sortColumn.map(s -> productRepository.findAll(Sort.by(Sort.Direction.DESC, s)))
-                    .orElseGet(productRepository::findAll);
+    public List<Product> getAll(String requestQuery) {
+        final String getAll = URI_PRODUCTS + "?" + requestQuery;
+        return Arrays.asList(
+                Objects.requireNonNull(
+                        restTemplate.getForObject(getAll, Product[].class)
+                )
+        );
     }
 
     @Transactional
-    public void update(Product product) {
-        checkNotFoundWithId(save(product), product.getId());
+    public void update(String requestBody, Integer id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Integer> params = new HashMap<>();
+        params.put("id", id);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+        restTemplate.put(URI_PRODUCTS_ID, request, params);
     }
 
     @Transactional
     public void delete(int id) {
-        checkNotFoundWithId(productRepository.delete(id), id);
+        Map<String, Integer> params = new HashMap<>();
+        params.put("id", id);
+        restTemplate.delete(URI_PRODUCTS_ID, params);
     }
 }
