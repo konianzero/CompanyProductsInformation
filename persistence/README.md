@@ -1,32 +1,36 @@
 Микросервис персистентного уровня
 ---------------------------------
 
-_**Spring Web | Spring Data | HSQL**_
+В проекте используются:
+
+- _Spring Web_
+- _Spring Data_
+- _HSQLDB_
+- _Lombok_
 
 ___
 
 Многомодульный проект:
   - [model](model)
   - [repository](repository)
-  
-В проекте используются:
 
-- _Spring Boot_
-- _HSQLDB_ для хранения данных
-- _Lombok_ для кодогенерации
+___
 
+### Требования
+
+- JDK 17
 ___
 
 ### Запуск
 * Запуск используя Maven Spring Boot plugin
     ```bash
-    mvn spring-boot:run -pl repository
+    ./mvnw spring-boot:run -pl repository
     ```
 
 * Запуск JAR
   * Собрать проект
       ```bash
-      mvn clean install
+      ./mvnw clean install
       ```
   * Запустить
       ```bash
