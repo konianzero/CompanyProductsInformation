@@ -1,9 +1,12 @@
 package org.company.front.service;
 
 import lombok.RequiredArgsConstructor;
+import org.company.persistence.model.Article;
 import org.company.persistence.model.Product;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +39,7 @@ public class ProductService {
 
     public List<Product> getAll(String requestQuery) {
         final String getAll = URI_PRODUCTS + "?" + requestQuery;
-        return Arrays.asList(
-                Objects.requireNonNull(
-                        restTemplate.getForObject(getAll, Product[].class)
-                )
-        );
+        return restTemplate.exchange(getAll, HttpMethod.GET, null, new ParameterizedTypeReference<List<Product>>(){}).getBody();
     }
 
     @Transactional
