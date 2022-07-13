@@ -1,3 +1,44 @@
+# - Информация о продукте
+
+### Создать информацию о продукте
+POST http://localhost:8080/info/products
+Content-Type: application/json;charset=UTF-8
+
+{
+  "name":"Новый продукт",
+  "description":"Описание Нового продукта",
+  "implementationCost":300000
+}
+
+### Получить информацию о продукте
+GET http://localhost:8080/info/products/100001
+
+### Получить информацию по всем продуктам
+GET http://localhost:8080/info/products
+
+### Фильтр по имени
+GET http://localhost:8080/info/products?filterBy=name&filter=дин
+
+### Фильтр по цене
+GET http://localhost:8080/info/products?filterBy=implementationCost&costFrom=200100
+
+### Сортировка по цене
+GET http://localhost:8080/info/products?sortBy=implementationCost
+
+### Обновить информацию о продукте
+PUT http://localhost:8080/info/products/100001
+Content-Type: application/json
+
+{
+  "id":100001,
+  "name":"Обновленный продукт",
+  "description":"Описание обновленного продукта",
+  "implementationCost":450000
+}
+
+### Удалить информацию о продукте
+DELETE http://localhost:8080/info/products/100001
+
 # - Статьи о продукте
 
 ### Создать статью
