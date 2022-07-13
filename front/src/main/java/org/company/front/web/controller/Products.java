@@ -3,7 +3,6 @@ package org.company.front.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.front.service.ProductService;
-import org.company.persistence.model.Article;
 import org.company.persistence.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,17 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.company.front.util.ValidationUtil.assureIdConsistent;
-import static org.company.front.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = Products.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,8 +26,7 @@ public class Products {
     private final ProductService productService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> create(HttpServletRequest request) throws IOException {
-        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    public ResponseEntity<Product> create(@RequestBody String requestBody) {
         log.info("Create new article - {}", requestBody);
         Product created = productService.create(requestBody);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -61,8 +52,7 @@ public class Products {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(HttpServletRequest request, @PathVariable int id) throws IOException {
-        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    public void update(@RequestBody String requestBody, @PathVariable int id) {
         log.info("Update article - {}", requestBody);
         productService.update(requestBody, id);
     }

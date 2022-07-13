@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = Articles.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,8 +26,7 @@ public class Articles {
     private final ArticleService articleService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Article> create(HttpServletRequest request) throws IOException {
-        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    public ResponseEntity<Article> create(@RequestBody String requestBody) {
         log.info("Create new article - {}", requestBody);
         Article created = articleService.create(requestBody);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -55,8 +52,7 @@ public class Articles {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(HttpServletRequest request, @PathVariable int id) throws IOException {
-        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    public void update(@RequestBody String requestBody, @PathVariable int id) {
         log.info("Update article - {}", requestBody);
         articleService.update(requestBody, id);
     }
