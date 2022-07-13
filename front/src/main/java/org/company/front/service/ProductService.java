@@ -1,13 +1,10 @@
 package org.company.front.service;
 
 import lombok.RequiredArgsConstructor;
-import org.company.persistence.model.Article;
 import org.company.persistence.model.Product;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -16,25 +13,21 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductService extends RestTemplateService {
 
-    public static final String URI_PRODUCTS = "http://localhost:8081/products";
+    public static final String URI_PRODUCTS = URI + "/products";
     private static final String URI_PRODUCTS_ID = URI_PRODUCTS + "/{id}";
 
     private final RestTemplate restTemplate;
 
     @Transactional
     public Product create(String requestBody) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers());
         return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
     }
 
     public Product get(int id) {
-        Map<String, Integer> params = new HashMap<>();
-        params.put("id", id);
-        return restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, params);
+        return restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
     }
 
     public List<Product> getAll(String requestQuery) {
@@ -44,18 +37,12 @@ public class ProductService {
 
     @Transactional
     public void update(String requestBody, Integer id) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, Integer> params = new HashMap<>();
-        params.put("id", id);
-        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
-        restTemplate.put(URI_PRODUCTS_ID, request, params);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers());
+        restTemplate.put(URI_PRODUCTS_ID, request, uriVariable(id));
     }
 
     @Transactional
     public void delete(int id) {
-        Map<String, Integer> params = new HashMap<>();
-        params.put("id", id);
-        restTemplate.delete(URI_PRODUCTS_ID, params);
+        restTemplate.delete(URI_PRODUCTS_ID, uriVariable(id));
     }
 }
