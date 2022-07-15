@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+  servlet:
+    context-path: /info
+    encoding:
+      charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
+      enabled: true # Enable http encoding support
+      force: true
+
+  error:
+    whitelabel.enabled: false
+    include-message: always
+    include-binding-errors: always
+    include-exception: false
+    include-stacktrace: on_param
+
+spring:
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+  jackson:
+    visibility:
+      field: any
+      getter: none
+      setter: none
+      is-getter: none
+
+logging:
+  charset:
+    console: "UTF-8"
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p){highlight} %clr([%15.15t]){faint} %clr(%-40.40logger{0}){magenta} %clr(:){faint} %clr(%m%n){highlight}"
+  level:
+    org.springframework: INFO
+
