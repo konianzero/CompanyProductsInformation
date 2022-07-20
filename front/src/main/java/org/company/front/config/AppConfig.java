@@ -11,7 +11,7 @@ public class AppConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder
-                //.rootUri("http://localhost:8081/articles/")
+                .rootUri("http://localhost:8081")
                 //.setConnectTimeout(Duration.ofSeconds(2))
                 //.setReadTimeout(Duration.ofSeconds(2))
                 .build();

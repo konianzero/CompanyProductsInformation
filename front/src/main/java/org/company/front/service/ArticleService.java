@@ -15,7 +15,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ArticleService extends RestTemplateService {
 
-    public static final String URI_ARTICLES = URI + "/articles";
+    public static final String URI_ARTICLES = "/articles";
     private static final String URI_ARTICLES_ID = URI_ARTICLES + "/{id}";
 
     private final RestTemplate restTemplate;

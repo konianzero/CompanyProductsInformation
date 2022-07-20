@@ -15,7 +15,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ProductService extends RestTemplateService {
 
-    public static final String URI_PRODUCTS = URI + "/products";
+    public static final String URI_PRODUCTS = "/products";
     private static final String URI_PRODUCTS_ID = URI_PRODUCTS + "/{id}";
 
     private final RestTemplate restTemplate;

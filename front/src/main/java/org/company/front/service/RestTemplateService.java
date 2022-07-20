@@ -8,8 +8,6 @@ import java.util.Map;
 
 public class RestTemplateService {
 
-    protected static final String URI = "http://localhost:8081";
-
     protected Map<String, Integer> uriVariable(int id) {
         Map<String, Integer> params = new HashMap<>();
         params.put("id", id);
