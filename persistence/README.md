@@ -26,7 +26,6 @@ ___
     ```bash
     ./mvnw spring-boot:run -pl repository
     ```
-
 * Запуск JAR
   * Собрать проект
       ```bash
@@ -36,6 +35,13 @@ ___
       ```bash
       java -jar repository/target/repository-0.1.0-SNAPSHOT.jar
       ```
+* Запустить контейнер
+  ```shell
+  docker build -t companiesinfo/repository .
+  ```
+  ```shell
+  #docker run --name dbRepository -d --rm -p 8081:8081 companiesinfo/repository:latest
+  ```
 
 ### Просмотр запущенного микросервиса
 [http://localhost:8081](http://localhost:8081)
