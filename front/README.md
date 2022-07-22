@@ -29,6 +29,13 @@ ___
       ```bash
       java -jar target/front-0.1.0-SNAPSHOT.jar
       ```
+* Запустить контейнер
+  ```shell
+  docker build -t companiesinfo/front-controller .
+  ```
+  ```shell
+  docker run --name frontController -d --rm -p 8080:8080 companiesinfo/front-controller:latest
+  ```
 
 ### Просмотр запущенного микросервиса
 [http://localhost:8080/info](http://localhost:8080/info)
