@@ -1,0 +1,18 @@
+spring:
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+
+jms:
+  queue:
+    in: to.remote
+    out: to.front
+
+logging:
+  charset:
+    console: "UTF-8"
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p){highlight} %clr([%15.15t]){faint} %clr(%-40.40logger{0}){magenta} %clr(:){faint} %clr(%m%n){highlight}"
+  level:
+    org.springframework: INFO
