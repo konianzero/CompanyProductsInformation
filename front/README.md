@@ -5,6 +5,7 @@
 
 - _Spring Web_
 - _Spring RestTemplate_
+- _Spring JMS_
 - _Lombok_
 
 ___
@@ -12,6 +13,7 @@ ___
 ### Требования
 
 - JDK 17
+- Docker 20
 
 ---
 
