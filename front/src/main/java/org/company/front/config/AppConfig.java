@@ -11,12 +11,12 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class AppConfig {
 
-    @Value("${DB_ADDRESS:http://localhost:8081}")
+    @Value("${rest-template.root-uri}")
     private String dbUri;
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-        log.info("Database URI - {}", dbUri);
+        log.info("Database URL - {}", dbUri);
         return restTemplateBuilder
                 .rootUri(dbUri)
                 //.setConnectTimeout(Duration.ofSeconds(2))

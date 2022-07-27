@@ -37,5 +37,7 @@ ___
   docker run --name frontController -d --rm -p 8080:8080 companiesinfo/front-controller:latest
   ```
 
+___
+
 ### Просмотр запущенного микросервиса
 [http://localhost:8080/info](http://localhost:8080/info)

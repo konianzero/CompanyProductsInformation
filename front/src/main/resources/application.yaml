@@ -24,9 +24,9 @@ spring:
       add-mappings: false
 
   activemq:
-      broker-url: tcp://localhost:61616
-      user: admin
-      password: admin
+    broker-url: ${MB_URL:tcp://localhost:61616}
+    user: ${MB_ADMIN_LOGIN:admin}
+    password: ${MB_ADMIN_PASSWORD:admin}
 
   jackson:
     visibility:
@@ -37,8 +37,11 @@ spring:
 
 jms:
   queue:
-    in: to.front
-    out: to.remote
+    in: ${MB_IN_QUEUE:to.front}
+    out: ${MB_OUT_QUEUE:to.remote}
+
+rest-template:
+  root-uri: ${DB_URL:http://localhost:8081}
 
 logging:
   charset:

@@ -40,8 +40,10 @@ ___
   docker build -t companiesinfo/repository .
   ```
   ```shell
-  #docker run --name dbRepository -d --rm -p 8081:8081 companiesinfo/repository:latest
+  docker run --name dbRepository -d --rm -p 8081:8081 companiesinfo/repository:latest
   ```
+
+___
 
 ### Просмотр запущенного микросервиса
 [http://localhost:8081](http://localhost:8081)

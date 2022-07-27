@@ -8,9 +8,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_ADDRESS=http://db:8081
+      - DB_URL=http://db:8081
+      - MB_URL=tcp://amq:61616
+      - MB_ADMIN_LOGIN=admin
+      - MB_ADMIN_PASSWORD=admin
+      - MB_IN_QUEUE=to.front
+      - MB_OUT_QUEUE=to.remote
     depends_on:
       - db
+      - remote
   db:
     image: 'companiesinfo/repository:latest'
     build:
@@ -18,3 +24,30 @@ services:
     container_name: repository
     ports:
       - "8081:8081"
+  remote:
+    image: companiesinfo/remote:latest
+    build:
+      context: remote
+    container_name: remote
+    environment:
+      - MB_URL=tcp://amq:61616
+      - MB_ADMIN_LOGIN=admin
+      - MB_ADMIN_PASSWORD=admin
+      - MB_IN_QUEUE=to.remote
+      - MB_OUT_QUEUE=to.front
+    depends_on:
+      - amq
+  amq:
+    image: webcenter/activemq:5.14.3
+    container_name: activemq
+    environment:
+      - ACTIVEMQ_NAME=amqp-srv0
+      - ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT=true
+      - ACTIVEMQ_ADMIN_LOGIN=admin
+      - ACTIVEMQ_ADMIN_PASSWORD=admin
+      - ACTIVEMQ_CONFIG_MINMEMORY=1024
+      - ACTIVEMQ_CONFIG_MAXMEMORY=4096
+      - ACTIVEMQ_ENABLED_SCHEDULER=true
+    ports:
+      - "8161:8161"
+      - "61616:61616"
