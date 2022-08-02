@@ -3,6 +3,7 @@ package org.company.front.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.front.service.ProductService;
+import org.company.front.web.view.ProductView;
 import org.company.persistence.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,7 +39,7 @@ public class Products {
     }
 
     @GetMapping("/{id}")
-    public Product get(@PathVariable int id) {
+    public ProductView get(@PathVariable int id) {
         log.info("Get product with id={}", id);
         return productService.get(id);
     }

@@ -1,11 +1,11 @@
-package org.company.remote.service;
+package org.company.front.service.jms;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.company.remote.to.ProductInfo;
-import org.company.remote.to.ProductInfoRequest;
+import org.company.front.service.jms.to.ProductInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -13,7 +13,6 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -21,13 +20,14 @@ import java.util.Map;
 public class JmsClient {
 
     private final JmsTemplate jmsTemplate;
-    private final Map<Integer, ProductInfo> mockInfoMap;
     private final ObjectMapper mapper;
 
     @Value("${jms.queue.out}")
     private String outQueueName;
     @Value("${jms.queue.in}")
     private String inQueueName;
+    @Getter
+    private ProductInfo receivedPayload = null;
 
     @PostConstruct
     public void init() {
@@ -40,7 +40,16 @@ public class JmsClient {
      * @param message сообщение.
      */
     public void sendMessage(final Object message) {
-        jmsTemplate.convertAndSend(outQueueName, message);
+        String payload = null;
+        try {
+            payload = mapper.writeValueAsString(message);
+            log.info("Outbound json='{}'", payload);
+        } catch (JsonProcessingException e) {
+            log.error("Error converting form person", e);
+        }
+
+        jmsTemplate.convertAndSend(outQueueName, payload);
+        receivedPayload = null;
     }
 
     /**
@@ -49,23 +58,13 @@ public class JmsClient {
     @JmsListener(destination = "${jms.queue.in}")
     public void receiveMessage(final Message<String> message) {
         log.info("Header - {}", message.getHeaders());
-        String inPayload = message.getPayload();
-        log.info("Inbound json='{}'", inPayload);
+        String payload = message.getPayload();
+        log.info("Inbound json='{}'", payload);
 
-        ProductInfoRequest request = null;
         try {
-            request = mapper.readValue(inPayload, ProductInfoRequest.class);
+            receivedPayload = mapper.readValue(payload, ProductInfo.class);
         } catch (Exception e) {
             log.error("Error while converting", e);
         }
-
-        String outPayload = "";
-        try {
-            outPayload = mapper.writeValueAsString(mockInfoMap.get(request.getId()));
-            log.info("Outbound json='{}'", outPayload);
-        } catch (JsonProcessingException e) {
-            log.error("Error converting product info", e);
-        }
-        sendMessage(outPayload);
     }
 }
