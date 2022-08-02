@@ -11,7 +11,7 @@ Content-Type: application/json;charset=UTF-8
 }
 
 ### Получить информацию о продукте
-GET http://localhost:8080/info/products/100001
+GET http://localhost:8080/info/products/100000
 
 ### Получить информацию по всем продуктам
 GET http://localhost:8080/info/products

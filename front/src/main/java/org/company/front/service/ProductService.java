@@ -1,6 +1,10 @@
 package org.company.front.service;
 
 import lombok.RequiredArgsConstructor;
+import org.company.front.service.jms.JmsClient;
+import org.company.front.service.jms.to.ProductInfo;
+import org.company.front.service.jms.to.ProductInfoRequest;
+import org.company.front.web.view.ProductView;
 import org.company.persistence.model.Product;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -19,6 +23,7 @@ public class ProductService extends RestTemplateService {
     private static final String URI_PRODUCTS_ID = URI_PRODUCTS + "/{id}";
 
     private final RestTemplate restTemplate;
+    private final JmsClient jmsClient;
 
     @Transactional
     public Product create(String requestBody) {
@@ -26,8 +31,26 @@ public class ProductService extends RestTemplateService {
         return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
     }
 
-    public Product get(int id) {
-        return restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
+    public ProductView get(int id) {
+        Product product = restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
+
+        jmsClient.sendMessage(new ProductInfoRequest(id));
+
+        ProductInfo productInfo = null;
+        int responseTimeoutInSeconds = 30;
+        try {
+            do {
+                if ((productInfo = jmsClient.getReceivedPayload()) != null) {
+                    break;
+                }
+                Thread.sleep(1000);
+                responseTimeoutInSeconds--;
+            } while (responseTimeoutInSeconds > 0);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        return new ProductView(product, productInfo);
     }
 
     public List<Product> getAll(String requestQuery) {
