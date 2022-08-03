@@ -45,7 +45,7 @@ public class JmsClient {
             payload = mapper.writeValueAsString(message);
             log.info("Outbound json='{}'", payload);
         } catch (JsonProcessingException e) {
-            log.error("Error converting form person", e);
+            log.error("Error while converting jms message payload(object) to json", e);
         }
 
         jmsTemplate.convertAndSend(outQueueName, payload);
@@ -64,7 +64,7 @@ public class JmsClient {
         try {
             receivedPayload = mapper.readValue(payload, ProductInfo.class);
         } catch (Exception e) {
-            log.error("Error while converting", e);
+            log.error("Error while converting jms message from json", e);
         }
     }
 }

@@ -56,7 +56,7 @@ public class JmsClient {
         try {
             request = mapper.readValue(inPayload, ProductInfoRequest.class);
         } catch (Exception e) {
-            log.error("Error while converting", e);
+            log.error("Error while converting jms message payload(object) to json", e);
         }
 
         String outPayload = "";
@@ -64,7 +64,7 @@ public class JmsClient {
             outPayload = mapper.writeValueAsString(mockInfoMap.get(request.getId()));
             log.info("Outbound json='{}'", outPayload);
         } catch (JsonProcessingException e) {
-            log.error("Error converting product info", e);
+            log.error("Error while converting jms message from json", e);
         }
         sendMessage(outPayload);
     }
