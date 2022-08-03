@@ -20,9 +20,9 @@ ___
 
 * Запустить в терминале:
     ```shell
-    mvn -f front/pom.xml clean install -DskipTests
     mvn -f persistence/pom.xml clean install
     mvn -f remote/pom.xml clean install
+    mvn -f front/pom.xml clean install -DskipTests
     docker-compose -f microservices.yml up --build
     ```
 
