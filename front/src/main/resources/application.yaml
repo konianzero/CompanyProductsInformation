@@ -36,6 +36,7 @@ spring:
       is-getter: none
 
 jms:
+  response-timeout-seconds: 30
   queue:
     in: ${MB_IN_QUEUE:to.front}
     out: ${MB_OUT_QUEUE:to.remote}

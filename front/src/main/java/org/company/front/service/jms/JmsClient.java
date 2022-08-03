@@ -26,6 +26,8 @@ public class JmsClient {
     private String outQueueName;
     @Value("${jms.queue.in}")
     private String inQueueName;
+    @Value("${jms.response-timeout-seconds}")
+    private int responseTimeoutInSeconds;
     @Getter
     private ProductInfo receivedPayload = null;
 
@@ -50,6 +52,22 @@ public class JmsClient {
 
         jmsTemplate.convertAndSend(outQueueName, payload);
         receivedPayload = null;
+    }
+
+    public ProductInfo getReceivedPayload() throws Exception {
+        try {
+            do {
+                if (receivedPayload != null) {
+                    return receivedPayload;
+                }
+                Thread.sleep(1000);
+                responseTimeoutInSeconds--;
+            } while (responseTimeoutInSeconds > 0);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        // TODO - Create dedicated exception
+        throw new Exception("Response waiting time exceeded");
     }
 
     /**

@@ -39,7 +39,7 @@ public class Products {
     }
 
     @GetMapping("/{id}")
-    public ProductView get(@PathVariable int id) {
+    public ProductView get(@PathVariable int id) throws Exception {
         log.info("Get product with id={}", id);
         return productService.get(id);
     }

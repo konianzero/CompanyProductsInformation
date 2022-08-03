@@ -31,24 +31,11 @@ public class ProductService extends RestTemplateService {
         return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
     }
 
-    public ProductView get(int id) {
+    public ProductView get(int id) throws Exception {
         Product product = restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
 
         jmsClient.sendMessage(new ProductInfoRequest(id));
-
-        ProductInfo productInfo = null;
-        int responseTimeoutInSeconds = 30;
-        try {
-            do {
-                if ((productInfo = jmsClient.getReceivedPayload()) != null) {
-                    break;
-                }
-                Thread.sleep(1000);
-                responseTimeoutInSeconds--;
-            } while (responseTimeoutInSeconds > 0);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        ProductInfo productInfo = jmsClient.getReceivedPayload();
 
         return new ProductView(product, productInfo);
     }
