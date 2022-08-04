@@ -1,5 +1,6 @@
 package org.company.front.web.controller;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.company.front.TestData;
 import org.company.front.service.ArticleService;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.company.front.TestData.ARTICLE_2;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -64,24 +66,24 @@ class ArticlesTest {
                 .isEqualTo(TestData.ARTICLE_1);
     }
 
-    // TODO - Fix Test https://stackoverflow.com/questions/69459620/resttemplate-result-cannot-be-deserialized
-//    @Test
-//    void getAll() throws Exception {
-//        // given
-//        String requestQuery = "filterBy=id&filter=100003";
-//        String articleTwo = objectMapper.writeValueAsString(ARTICLE_2);
-//        // when
-//        this.server.expect(requestTo(ArticleService.URI_ARTICLES + "?" + requestQuery))
-//                .andRespond(withSuccess(articleTwo, MediaType.APPLICATION_JSON));
-//        // then
-//        assertThat(this.client.getAll(requestQuery))
-//                .isNotEmpty()
-//                .filteredOn(article ->
-//                        article.getId().equals(ARTICLE_2.getId())
-//                        && article.getName().equals(ARTICLE_2.getName())
-//                        && article.getContent().equals(ARTICLE_2.getContent())
-//                ).hasSize(1);
-//    }
+    @Test
+    void getAll() throws Exception {
+        // given
+        objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        String requestQuery = "filterBy=id&filter=100003";
+        String articleTwo = objectMapper.writeValueAsString(ARTICLE_2);
+        // when
+        this.server.expect(requestTo(ArticleService.URI_ARTICLES + "?" + requestQuery))
+                .andRespond(withSuccess(articleTwo, MediaType.APPLICATION_JSON));
+        // then
+        assertThat(this.client.getAll(requestQuery))
+                .isNotEmpty()
+                .filteredOn(article ->
+                        article.getId().equals(ARTICLE_2.getId())
+                        && article.getName().equals(ARTICLE_2.getName())
+                        && article.getContent().equals(ARTICLE_2.getContent())
+                ).hasSize(1);
+    }
 }
 
 
