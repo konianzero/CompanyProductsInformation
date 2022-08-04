@@ -1,6 +1,8 @@
 package org.company.front;
 
 import lombok.experimental.UtilityClass;
+import org.company.front.service.jms.to.ProductInfo;
+import org.company.front.web.view.ProductView;
 import org.company.persistence.model.Article;
 import org.company.persistence.model.Product;
 
@@ -42,4 +44,5 @@ public class TestData {
             null,
             "Содержание статьи о НОВОМ продукте",
             null);
+    public static final ProductView PRODUCT_1_VIEW = new ProductView(PRODUCT_1, new ProductInfo());
 }
