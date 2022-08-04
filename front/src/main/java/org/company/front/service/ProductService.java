@@ -31,7 +31,7 @@ public class ProductService extends RestTemplateService {
         return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
     }
 
-    public ProductView get(int id) throws Exception {
+    public ProductView get(int id) {
         Product product = restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
 
         jmsClient.sendMessage(new ProductInfoRequest(id));

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.front.service.jms.to.ProductInfo;
+import org.company.front.util.exception.WaitingTimeExceededException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -54,7 +55,7 @@ public class JmsClient {
         receivedPayload = null;
     }
 
-    public ProductInfo getReceivedPayload() throws Exception {
+    public ProductInfo getReceivedPayload() {
         try {
             do {
                 if (receivedPayload != null) {
@@ -66,8 +67,7 @@ public class JmsClient {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        // TODO - Create dedicated exception
-        throw new Exception("Response waiting time exceeded");
+        throw new WaitingTimeExceededException("Response waiting time exceeded");
     }
 
     /**

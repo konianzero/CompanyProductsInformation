@@ -61,7 +61,7 @@ public class JmsClient {
 
         String outPayload = "";
         try {
-            outPayload = mapper.writeValueAsString(mockInfoMap.get(request.getId()));
+            outPayload = mapper.writeValueAsString(mockInfoMap.getOrDefault(request.getId(), new ProductInfo()));
             log.info("Outbound json='{}'", outPayload);
         } catch (JsonProcessingException e) {
             log.error("Error while converting jms message from json", e);
