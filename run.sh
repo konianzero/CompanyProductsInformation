@@ -6,5 +6,5 @@ echo JAVA_HOME=\"$JAVA_HOME\"
 
 cd persistence/ && ./mvnw clean install
 cd ../remote/ && ./mvnw clean install
-cd ../front/ && ./mvnw clean install -DskipTests
+cd ../front/ && ./mvnw clean install
 cd .. && docker-compose -f microservices.yml up --build

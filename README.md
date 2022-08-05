@@ -22,7 +22,7 @@ ___
     ```shell
     mvn -f persistence/pom.xml clean install
     mvn -f remote/pom.xml clean install
-    mvn -f front/pom.xml clean install -DskipTests
+    mvn -f front/pom.xml clean install
     docker-compose -f microservices.yml up --build
     ```
 
