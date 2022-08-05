@@ -47,25 +47,20 @@ public class JmsClient {
      * Прослушиватель сообщений.
      */
     @JmsListener(destination = "${jms.queue.in}")
-    public void receiveMessage(final Message<String> message) {
+    public void receiveMessage(final Message<String> message) throws JsonProcessingException {
         log.info("Header - {}", message.getHeaders());
-        String inPayload = message.getPayload();
-        log.info("Inbound json='{}'", inPayload);
+        String payload = message.getPayload();
+        log.info("Inbound json='{}'", payload);
+        sendMessage(makeResponse(processRequest(payload)));
+    }
 
-        ProductInfoRequest request = null;
-        try {
-            request = mapper.readValue(inPayload, ProductInfoRequest.class);
-        } catch (Exception e) {
-            log.error("Error while converting jms message payload(object) to json", e);
-        }
+    private ProductInfoRequest processRequest(String payload) throws JsonProcessingException {
+        return mapper.readValue(payload, ProductInfoRequest.class);
+    }
 
-        String outPayload = "";
-        try {
-            outPayload = mapper.writeValueAsString(mockInfoMap.getOrDefault(request.getId(), new ProductInfo()));
-            log.info("Outbound json='{}'", outPayload);
-        } catch (JsonProcessingException e) {
-            log.error("Error while converting jms message from json", e);
-        }
-        sendMessage(outPayload);
+    private String makeResponse(ProductInfoRequest request) throws JsonProcessingException {
+        return mapper.writeValueAsString(
+                mockInfoMap.getOrDefault(request.getId(), new ProductInfo())
+        );
     }
 }
