@@ -2,6 +2,7 @@ package org.company.remote.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.company.remote.JmsErrorHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,11 +47,13 @@ public class JmsConfig {
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
+        factory.setErrorHandler(new JmsErrorHandler());
 //        factory.setMessageConverter(jacksonJmsMessageConverter());
         factory.setConcurrency("1-1");
         return factory;
     }
 
+    // TODO - https://ichihedge.wordpress.com/2016/05/23/correctly-configuring-mappingjackson2messageconverter-for-messaging-via-json/
 //    @Bean // Serialize message content to json using TextMessage
 //    public MessageConverter jacksonJmsMessageConverter() {
 //        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
