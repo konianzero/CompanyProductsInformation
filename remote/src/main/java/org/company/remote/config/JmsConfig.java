@@ -9,9 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
-import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.MessageType;
 
 @Configuration
 @Slf4j
@@ -39,7 +36,6 @@ public class JmsConfig {
     public JmsTemplate jmsTemplate(){
         JmsTemplate template = new JmsTemplate();
         template.setConnectionFactory(connectionFactory());
-//        template.setMessageConverter(jacksonJmsMessageConverter());
         return template;
     }
 
@@ -48,17 +44,7 @@ public class JmsConfig {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
         factory.setErrorHandler(new JmsErrorHandler());
-//        factory.setMessageConverter(jacksonJmsMessageConverter());
         factory.setConcurrency("1-1");
         return factory;
     }
-
-    // TODO - https://ichihedge.wordpress.com/2016/05/23/correctly-configuring-mappingjackson2messageconverter-for-messaging-via-json/
-//    @Bean // Serialize message content to json using TextMessage
-//    public MessageConverter jacksonJmsMessageConverter() {
-//        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-//        converter.setTargetType(MessageType.TEXT);
-//        converter.setTypeIdPropertyName("payload_type");
-//        return converter;
-//    }
 }

@@ -8,9 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
-import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.MessageType;
 
 @Configuration
 @Slf4j
@@ -37,8 +34,8 @@ public class JmsConfig {
     @Bean
     public JmsTemplate jmsTemplate() {
         JmsTemplate template = new JmsTemplate();
+        template.setDeliveryPersistent(true);
         template.setConnectionFactory(connectionFactory());
-//        template.setMessageConverter(jacksonJmsMessageConverter());
         return template;
     }
 
@@ -46,16 +43,7 @@ public class JmsConfig {
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
-//        factory.setMessageConverter(jacksonJmsMessageConverter());
         factory.setConcurrency("1-1");
         return factory;
     }
-
-//    @Bean // Serialize message content to json using TextMessage
-//    public MessageConverter jacksonJmsMessageConverter() {
-//        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-//        converter.setTargetType(MessageType.TEXT);
-//        converter.setTypeIdPropertyName("payload_type");
-//        return converter;
-//    }
 }
