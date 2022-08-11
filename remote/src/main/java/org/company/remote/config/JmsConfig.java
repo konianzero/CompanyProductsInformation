@@ -1,14 +1,24 @@
 package org.company.remote.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.company.remote.JmsErrorHandler;
+import org.company.remote.to.ProductInfo;
+import org.company.remote.to.ProductInfoRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
+import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.jms.support.converter.MessageType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @Slf4j
@@ -21,6 +31,8 @@ public class JmsConfig {
     private String userName;
     @Value("${spring.activemq.password}")
     private String password;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Bean
     public ActiveMQConnectionFactory connectionFactory(){
@@ -36,6 +48,7 @@ public class JmsConfig {
     public JmsTemplate jmsTemplate(){
         JmsTemplate template = new JmsTemplate();
         template.setConnectionFactory(connectionFactory());
+        template.setMessageConverter(jacksonJmsMessageConverter());
         return template;
     }
 
@@ -44,7 +57,21 @@ public class JmsConfig {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
         factory.setErrorHandler(new JmsErrorHandler());
+        factory.setMessageConverter(jacksonJmsMessageConverter());
         factory.setConcurrency("1-1");
         return factory;
+    }
+
+    @Bean
+    public MessageConverter jacksonJmsMessageConverter() {
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setTargetType(MessageType.TEXT);
+        converter.setObjectMapper(objectMapper);
+        converter.setTypeIdPropertyName("jms_message_payload_type");
+        Map<String,Class<?>> typeIdMap = new HashMap<>();
+        typeIdMap.put("request_payload_type", ProductInfoRequest.class);
+        typeIdMap.put("response_payload_type", ProductInfo.class);
+        converter.setTypeIdMappings(typeIdMap);
+        return converter;
     }
 }
