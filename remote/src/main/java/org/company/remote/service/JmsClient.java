@@ -37,30 +37,20 @@ public class JmsClient {
     /**
      * Посылает сообщение в очередь.
      *
-     * @param message сообщение.
+     * @param payload тело сообщения.
      */
-    public void sendMessage(final Object message) {
-        jmsTemplate.convertAndSend(outQueueName, message);
+    public void sendMessage(final Object payload) {
+        jmsTemplate.convertAndSend(outQueueName, payload);
     }
 
     /**
      * Прослушиватель сообщений.
      */
     @JmsListener(destination = "${jms.queue.in}")
-    public void receiveMessage(final Message<String> message) throws JsonProcessingException {
+    public void receiveMessage(final Message<ProductInfoRequest> message) throws JsonProcessingException {
         log.info("Header - {}", message.getHeaders());
-        String payload = message.getPayload();
-        log.info("Inbound json='{}'", payload);
-        sendMessage(makeResponse(processRequest(payload)));
-    }
-
-    private ProductInfoRequest processRequest(String payload) throws JsonProcessingException {
-        return mapper.readValue(payload, ProductInfoRequest.class);
-    }
-
-    private String makeResponse(ProductInfoRequest request) throws JsonProcessingException {
-        return mapper.writeValueAsString(
-                mockInfoMap.getOrDefault(request.getId(), new ProductInfo())
-        );
+        ProductInfoRequest payload = message.getPayload();
+        log.info("Inbound payload='{}'", payload);
+        sendMessage(mockInfoMap.getOrDefault(payload.getId(), new ProductInfo()));
     }
 }

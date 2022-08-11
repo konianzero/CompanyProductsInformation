@@ -1,8 +1,5 @@
 package org.company.front.service.jms;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.front.service.jms.to.ProductInfo;
@@ -21,7 +18,6 @@ import javax.annotation.PostConstruct;
 public class JmsClient {
 
     private final JmsTemplate jmsTemplate;
-    private final ObjectMapper mapper;
 
     @Value("${jms.queue.out}")
     private String outQueueName;
@@ -29,7 +25,6 @@ public class JmsClient {
     private String inQueueName;
     @Value("${jms.response-timeout-seconds}")
     private int responseTimeoutInSeconds;
-    @Getter
     private ProductInfo receivedPayload = null;
 
     @PostConstruct
@@ -40,17 +35,9 @@ public class JmsClient {
     /**
      * Посылает сообщение в очередь.
      *
-     * @param message сообщение.
+     * @param payload тело сообщения.
      */
-    public void sendMessage(final Object message) {
-        String payload = null;
-        try {
-            payload = mapper.writeValueAsString(message);
-            log.info("Outbound json='{}'", payload);
-        } catch (JsonProcessingException e) {
-            log.error("Error while converting jms message payload(object) to json", e);
-        }
-
+    public void sendMessage(final Object payload) {
         jmsTemplate.convertAndSend(outQueueName, payload);
         receivedPayload = null;
     }
@@ -74,15 +61,10 @@ public class JmsClient {
      * Прослушиватель сообщений.
      */
     @JmsListener(destination = "${jms.queue.in}")
-    public void receiveMessage(final Message<String> message) {
+    public void receiveMessage(final Message<ProductInfo> message) {
         log.info("Header - {}", message.getHeaders());
-        String payload = message.getPayload();
-        log.info("Inbound json='{}'", payload);
-
-        try {
-            receivedPayload = mapper.readValue(payload, ProductInfo.class);
-        } catch (Exception e) {
-            log.error("Error while converting jms message from json", e);
-        }
+        ProductInfo payload = message.getPayload();
+        log.info("Inbound payload='{}'", payload);
+        receivedPayload = payload;
     }
 }
