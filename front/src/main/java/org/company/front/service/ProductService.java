@@ -3,7 +3,7 @@ package org.company.front.service;
 import lombok.RequiredArgsConstructor;
 import org.company.front.service.jms.JmsClient;
 import org.company.front.service.jms.to.ProductInfo;
-import org.company.front.service.jms.to.ProductInfoRequest;
+import org.company.front.service.jms.to.ProductsInfoRequest;
 import org.company.front.web.view.ProductView;
 import org.company.persistence.model.Product;
 import org.springframework.core.ParameterizedTypeReference;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,15 +35,23 @@ public class ProductService extends RestTemplateService {
     public ProductView get(int id) {
         Product product = restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
 
-        jmsClient.sendMessage(new ProductInfoRequest(id));
-        ProductInfo productInfo = jmsClient.getReceivedPayload();
+        jmsClient.sendMessage(new ProductsInfoRequest(Collections.singletonList(id)));
+        ProductInfo productInfo = jmsClient.getReceivedPayload().get(0);
 
         return new ProductView(product, productInfo);
     }
 
-    public List<Product> getAll(String requestQuery) {
+    public List<ProductView> getAll(String requestQuery) {
         final String getAll = URI_PRODUCTS + "?" + requestQuery;
-        return restTemplate.exchange(getAll, HttpMethod.GET, null, new ParameterizedTypeReference<List<Product>>(){}).getBody();
+        List<Product> products = restTemplate.exchange(getAll, HttpMethod.GET, null, new ParameterizedTypeReference<List<Product>>(){}).getBody();
+
+        List<Integer> productsIds = products.stream().map(product -> product.getId()).toList();
+        jmsClient.sendMessage(new ProductsInfoRequest(productsIds));
+        List<ProductInfo> productsInfo = jmsClient.getReceivedPayload();
+
+        return Stream.iterate(0, id -> id < productsIds.size(), id -> id + 1)
+                .map(i -> new ProductView(products.get(i), productsInfo.get(i)))
+                .toList();
     }
 
     @Transactional

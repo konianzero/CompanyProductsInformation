@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.remote.to.ProductInfo;
-import org.company.remote.to.ProductInfoRequest;
+import org.company.remote.to.ProductsInfoRequest;
+import org.company.remote.to.ProductsInfoResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -47,10 +48,13 @@ public class JmsClient {
      * Прослушиватель сообщений.
      */
     @JmsListener(destination = "${jms.queue.in}")
-    public void receiveMessage(final Message<ProductInfoRequest> message) throws JsonProcessingException {
+    public void receiveMessage(final Message<ProductsInfoRequest> message) throws JsonProcessingException {
         log.info("Header - {}", message.getHeaders());
-        ProductInfoRequest payload = message.getPayload();
+        ProductsInfoRequest payload = message.getPayload();
         log.info("Inbound payload='{}'", payload);
-        sendMessage(mockInfoMap.getOrDefault(payload.getId(), new ProductInfo()));
+        ProductsInfoResponse response = new ProductsInfoResponse(
+            payload.getIds().stream().map(id -> mockInfoMap.getOrDefault(id, new ProductInfo())).toList()
+        );
+        sendMessage(response);
     }
 }

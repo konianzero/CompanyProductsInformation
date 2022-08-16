@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.company.remote.JmsErrorHandler;
-import org.company.remote.to.ProductInfo;
-import org.company.remote.to.ProductInfoRequest;
+import org.company.remote.to.ProductsInfoRequest;
+import org.company.remote.to.ProductsInfoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -69,8 +69,8 @@ public class JmsConfig {
         converter.setObjectMapper(objectMapper);
         converter.setTypeIdPropertyName("jms_message_payload_type");
         Map<String,Class<?>> typeIdMap = new HashMap<>();
-        typeIdMap.put("request_payload_type", ProductInfoRequest.class);
-        typeIdMap.put("response_payload_type", ProductInfo.class);
+        typeIdMap.put("request_payload_type", ProductsInfoRequest.class);
+        typeIdMap.put("response_payload_type", ProductsInfoResponse.class);
         converter.setTypeIdMappings(typeIdMap);
         return converter;
     }

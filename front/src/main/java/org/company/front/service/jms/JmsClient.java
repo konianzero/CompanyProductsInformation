@@ -3,6 +3,7 @@ package org.company.front.service.jms;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.front.service.jms.to.ProductInfo;
+import org.company.front.service.jms.to.ProductsInfoResponse;
 import org.company.front.util.exception.WaitingTimeExceededException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
@@ -11,6 +12,7 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,7 +27,7 @@ public class JmsClient {
     private String inQueueName;
     @Value("${jms.response-timeout-seconds}")
     private int responseTimeoutInSeconds;
-    private ProductInfo receivedPayload = null;
+    private List<ProductInfo> receivedPayload = null;
 
     @PostConstruct
     public void init() {
@@ -42,16 +44,18 @@ public class JmsClient {
         receivedPayload = null;
     }
 
-    public ProductInfo getReceivedPayload() {
+    public List<ProductInfo> getReceivedPayload() {
+        int responseTimeout = responseTimeoutInSeconds;
         try {
             do {
                 if (receivedPayload != null) {
                     return receivedPayload;
                 }
                 Thread.sleep(1000);
-                responseTimeoutInSeconds--;
-            } while (responseTimeoutInSeconds > 0);
+                responseTimeout--;
+            } while (responseTimeout > 0);
         } catch (InterruptedException e) {
+            log.error("Thread {} interrupt", Thread.currentThread().getName());
             Thread.currentThread().interrupt();
         }
         throw new WaitingTimeExceededException("Response waiting time exceeded");
@@ -61,10 +65,10 @@ public class JmsClient {
      * Прослушиватель сообщений.
      */
     @JmsListener(destination = "${jms.queue.in}")
-    public void receiveMessage(final Message<ProductInfo> message) {
+    public void receiveMessage(final Message<ProductsInfoResponse> message) {
         log.info("Header - {}", message.getHeaders());
-        ProductInfo payload = message.getPayload();
+        ProductsInfoResponse payload = message.getPayload();
         log.info("Inbound payload='{}'", payload);
-        receivedPayload = payload;
+        receivedPayload = payload.getProductsInfo();
     }
 }

@@ -16,6 +16,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = Products.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,8 +46,10 @@ public class Products {
     }
 
     @GetMapping
-    public List<Product> getAll(HttpServletRequest request) {
-        String requestQuery = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
+    public List<ProductView> getAll(HttpServletRequest request) {
+        String requestQuery = Objects.nonNull(request.getQueryString())
+                ? URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8)
+                : "";
         log.info("Get all articles with query - {}", requestQuery);
         return productService.getAll(requestQuery);
     }

@@ -19,7 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.MockRestServiceServer;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.company.front.TestData.PRODUCTS_VIEW;
 import static org.company.front.TestData.PRODUCT_2;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -65,7 +68,7 @@ class ProductsTest {
         // given
         String productOne = objectMapper.writeValueAsString(TestData.PRODUCT_1_VIEW);
         // when
-        Mockito.when(jmsClient.getReceivedPayload()).thenReturn(new ProductInfo());
+        Mockito.when(jmsClient.getReceivedPayload()).thenReturn(List.of(new ProductInfo()));
         this.server.expect(requestTo(ProductService.URI_PRODUCTS + "/100000"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(productOne, MediaType.APPLICATION_JSON));
@@ -80,18 +83,19 @@ class ProductsTest {
         // given
         objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
         String requestQuery = "filterBy=id&filter=100001";
-        String productTwo = objectMapper.writeValueAsString(PRODUCT_2);
+        String products = objectMapper.writeValueAsString(PRODUCTS_VIEW);
         // when
+        Mockito.when(jmsClient.getReceivedPayload()).thenReturn(List.of(new ProductInfo()));
         this.server.expect(requestTo(ProductService.URI_PRODUCTS + "?" + requestQuery))
-                .andRespond(withSuccess(productTwo, MediaType.APPLICATION_JSON));
+                .andRespond(withSuccess(products, MediaType.APPLICATION_JSON));
         // then
         assertThat(this.client.getAll(requestQuery))
                 .isNotEmpty()
-                .filteredOn(product ->
-                        product.getId().equals(PRODUCT_2.getId())
-                        && product.getName().equals(PRODUCT_2.getName())
-                        && product.getDescription().equals(PRODUCT_2.getDescription())
-                        && product.getImplementationCost() == PRODUCT_2.getImplementationCost()
+                .filteredOn(productView ->
+                        productView.getId().equals(PRODUCT_2.getId())
+                        && productView.getName().equals(PRODUCT_2.getName())
+                        && productView.getDescription().equals(PRODUCT_2.getDescription())
+                        && productView.getImplementationCost() == PRODUCT_2.getImplementationCost()
                 ).hasSize(1);
     }
 }
