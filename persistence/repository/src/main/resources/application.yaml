@@ -57,3 +57,9 @@ logging:
   level:
     org.springframework: INFO
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
