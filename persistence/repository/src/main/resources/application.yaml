@@ -60,6 +60,27 @@ logging:
 management:
   endpoints:
     web:
+      base-path: /monitor
       exposure:
-        include: "*"
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env.enabled: true
+  metrics:
+    enable:
+      executor: false
+      hikaricp: false
+      jdbc: false
+      jvm: false
+      tomcat: false
 
+# Configuring info endpoint
+info:
+  app:
+    name: '@project.name@'
+    description: '@project.description@'
+    project: '@project.groupId@:@project.artifactId@:@project.version@'
+    java-version: '@java.vendor.version@ @java.vendor@'
+    jvm: '@java.vm.name@ @java.vm.version@ @java.vm.vendor@'

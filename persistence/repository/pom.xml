@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>repository</artifactId>
+    <name>repository</name>
 
     <dependencies>
         <dependency>
