@@ -11,16 +11,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 @Slf4j
+@EnableTransactionManagement
 @EnableJms
 public class JmsConfig {
 
@@ -47,6 +50,7 @@ public class JmsConfig {
     public JmsTemplate jmsTemplate() {
         JmsTemplate template = new JmsTemplate();
         template.setConnectionFactory(connectionFactory());
+        template.setSessionTransacted(true);
         template.setMessageConverter(jacksonJmsMessageConverter());
         return template;
     }
@@ -71,5 +75,12 @@ public class JmsConfig {
         typeIdMap.put("response_payload_type", ProductsInfoResponse.class);
         converter.setTypeIdMappings(typeIdMap);
         return converter;
+    }
+
+    @Bean
+    public JmsTransactionManager jmsTransactionManager() {
+        JmsTransactionManager jmsTransactionManager = new JmsTransactionManager();
+        jmsTransactionManager.setConnectionFactory(connectionFactory());
+        return jmsTransactionManager;
     }
 }

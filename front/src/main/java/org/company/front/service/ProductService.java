@@ -31,6 +31,7 @@ public class ProductService extends RestTemplateService {
         return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
     }
 
+    @Transactional
     public ProductView get(int id) {
         Product product = restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
 
@@ -40,6 +41,7 @@ public class ProductService extends RestTemplateService {
         return new ProductView(product, productInfo);
     }
 
+    @Transactional
     public List<ProductView> getAll(String requestQuery) {
         final String getAll = URI_PRODUCTS + "?" + requestQuery;
         List<Product> products = restTemplate.exchange(getAll, HttpMethod.GET, null, new ParameterizedTypeReference<List<Product>>(){}).getBody();
