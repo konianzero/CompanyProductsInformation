@@ -47,3 +47,5 @@ ___
 
 ### Просмотр запущенного микросервиса
 [http://localhost:8081](http://localhost:8081)
+
+Мониторинг приложения [http://localhost:8081/monitor](http://localhost:8081/monitor)
