@@ -26,7 +26,6 @@ public class ProductService extends RestTemplateService {
     private final RestTemplate restTemplate;
     private final JmsClient jmsClient;
 
-    @Transactional
     public Product create(String requestBody) {
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers());
         return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
@@ -54,13 +53,11 @@ public class ProductService extends RestTemplateService {
                 .toList();
     }
 
-    @Transactional
     public void update(String requestBody, Integer id) {
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers());
         restTemplate.put(URI_PRODUCTS_ID, request, uriVariable(id));
     }
 
-    @Transactional
     public void delete(int id) {
         restTemplate.delete(URI_PRODUCTS_ID, uriVariable(id));
     }

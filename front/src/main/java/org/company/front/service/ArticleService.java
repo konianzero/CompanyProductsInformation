@@ -20,7 +20,6 @@ public class ArticleService extends RestTemplateService {
 
     private final RestTemplate restTemplate;
 
-    @Transactional
     public Article create(String requestBody) {
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers());
         return restTemplate.postForObject(URI_ARTICLES, request, Article.class);
@@ -35,13 +34,11 @@ public class ArticleService extends RestTemplateService {
         return restTemplate.exchange(getAll, HttpMethod.GET, null, new ParameterizedTypeReference<List<Article>>(){}).getBody();
     }
 
-    @Transactional
     public void update(String requestBody, Integer id) {
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers());
         restTemplate.put(URI_ARTICLES_ID, request, uriVariable(id));
     }
 
-    @Transactional
     public void delete(int id) {
         restTemplate.delete(URI_ARTICLES_ID, uriVariable(id));
     }
