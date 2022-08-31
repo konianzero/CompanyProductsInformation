@@ -3,7 +3,7 @@ services:
   front:
     image: 'companiesinfo/front-controller:latest'
     build:
-      context: front
+      context: front/controller
     container_name: front-controller
     ports:
       - "8080:8080"

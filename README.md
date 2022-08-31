@@ -29,4 +29,8 @@ ___
 ___
 
 ### Просмотр запущенного Front микросервиса
+
 [http://localhost:8080/info](http://localhost:8080/info)
+- Вы можете использовать HTTP-клиент IntelliJ IDEA с [endpoints.http](endpoints.http).
+- ActiveMQ панель администратора (User Name: admin / Password: admin) [http://localhost:8161/admin](http://localhost:8161/admin)
+- Мониторинг состояния Persistence микросервис [http://localhost:8081/monitor](http://localhost:8081/monitor)
