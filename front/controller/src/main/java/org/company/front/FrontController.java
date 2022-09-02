@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
         //DataSourceTransactionManagerAutoConfiguration.class,
         //HibernateJpaAutoConfiguration.class
 })
-@ComponentScan(basePackages = {"org.company.cache", "org.company.front"})
+//@ComponentScan(basePackages = {"org.company.cache", "org.company.front"})
 public class FrontController {
 
     public static void main(String[] args) {

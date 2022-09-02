@@ -43,8 +43,6 @@ class ProductsTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-    // TODO - Fix test
     @Test
     void create() throws Exception {
         // given
