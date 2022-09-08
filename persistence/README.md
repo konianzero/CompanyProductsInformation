@@ -48,6 +48,8 @@ ___
 ___
 
 ### Просмотр запущенного микросервиса
-[http://localhost:8081](http://localhost:8081)
 
-Мониторинг приложения [http://localhost:8081/monitor](http://localhost:8081/monitor)
+URL: [http://localhost:8081](http://localhost:8081)
+
+- Вы можете использовать HTTP-клиент IntelliJ IDEA с [endpoints.http](repository/endpoints.http)
+- Мониторинг состояния Persistence микросервиса [http://localhost:8081/monitor](http://localhost:8081/monitor)
