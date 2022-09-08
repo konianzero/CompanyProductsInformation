@@ -6,7 +6,14 @@
 - _Spring Web_
 - _Spring RestTemplate_
 - _Spring JMS_
+- _Hazelcast_
 - _Lombok_
+
+___
+
+Многомодульный проект:
+- [controller](controller)
+- [cache](cache)
 
 ___
 
@@ -20,7 +27,7 @@ ___
 ### Запуск
 * Запуск используя Maven Spring Boot plugin
     ```bash
-    ./mvnw spring-boot:run
+    ./mvnw spring-boot:run -pl controller
     ```
 * Запуск JAR
   * Собрать проект
@@ -29,7 +36,7 @@ ___
       ```
   * Запустить
       ```bash
-      java -jar target/front-0.1.0-SNAPSHOT.jar
+      java -jar controller/target/controller-0.1.0-SNAPSHOT.jar
       ```
 * Запустить контейнер
   ```shell
@@ -43,3 +50,5 @@ ___
 
 ### Просмотр запущенного микросервиса
 [http://localhost:8080/info](http://localhost:8080/info)
+
+[ActiveMQ панель администратора](http://localhost:8161/admin) (User Name: admin / Password: admin)
