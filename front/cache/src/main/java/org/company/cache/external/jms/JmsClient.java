@@ -51,7 +51,7 @@ public class JmsClient {
     }
 
     @SneakyThrows
-    public List<ProductInfo> getReceivedPayload() {
+    private List<ProductInfo> getReceivedPayload() {
         int responseTimeout = responseTimeoutInSeconds;
         try {
             do {
@@ -72,7 +72,7 @@ public class JmsClient {
      * Прослушиватель сообщений.
      */
     @JmsListener(destination = "${jms.queue.in}")
-    public void receiveMessage(final Message<ProductsInfoResponse> message) {
+    private void receiveMessage(final Message<ProductsInfoResponse> message) {
         log.info("Header - {}", message.getHeaders());
         ProductsInfoResponse payload = message.getPayload();
         log.info("Inbound payload='{}'", payload);

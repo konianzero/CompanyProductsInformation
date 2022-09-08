@@ -21,8 +21,8 @@ public class HazelcastCache {
     @PostConstruct
     public void init() {
         log.info("{} started", this.getClass().getSimpleName());
-        log.info("Is HazelcastClient autowired: {}", Objects.nonNull(hazelcastClient));
-        log.info("Is JmsClient autowired: {}", Objects.nonNull(jmsClient));
+        log.info("HazelcastCache.HazelcastClient autowired: {}", Objects.nonNull(hazelcastClient));
+        log.info("HazelcastCache.JmsClient autowired: {}", Objects.nonNull(jmsClient));
     }
 
     public List<ProductInfo> getData(final ProductsInfoRequest payload) {

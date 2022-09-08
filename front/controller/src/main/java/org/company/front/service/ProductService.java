@@ -10,7 +10,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -31,7 +30,7 @@ public class ProductService extends RestTemplateService {
     @PostConstruct
     public void init() {
         log.info("{} started", this.getClass().getSimpleName());
-        log.info("Is HazelcastCache autowired: {}", Objects.nonNull(hazelcastCache));
+        log.info("ProductService.HazelcastCache autowired: {}", Objects.nonNull(hazelcastCache));
     }
 
     public Product create(String requestBody) {
@@ -39,14 +38,12 @@ public class ProductService extends RestTemplateService {
         return restTemplate.postForObject(URI_PRODUCTS, request, Product.class);
     }
 
-    //@Transactional
     public ProductView get(int id) {
         Product product = restTemplate.getForObject(URI_PRODUCTS_ID, Product.class, uriVariable(id));
         List<ProductInfo> productsInfo = hazelcastCache.getData(new ProductsInfoRequest(Collections.singletonList(id)));
         return new ProductView(product, productsInfo.get(0));
     }
 
-    //@Transactional
     public List<ProductView> getAll(String requestQuery) {
         final String getAll = URI_PRODUCTS + "?" + requestQuery;
         List<Product> products = restTemplate.exchange(getAll, HttpMethod.GET, null, new ParameterizedTypeReference<List<Product>>(){}).getBody();
